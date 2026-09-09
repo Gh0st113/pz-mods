@@ -2,6 +2,11 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.0 — 2026-09-09
+- **Real Husbandry XP.** Milking now routes through the vanilla milking action into a bucket — so you get the exact engine-computed XP (scaled by the animal's Animal Care), the correct amounts, and the stress mechanic — then the milk is **automatically poured from the bucket into the barrel**. A bucket is required by default.
+- New sandbox option **"Allow milking without a bucket"** (off by default): permits the old direct animal->barrel transfer when the player has no bucket, but it grants **no XP** (a tooltip warns about it).
+- The **duration multiplier** sandbox option now applies **only** to the no-bucket direct transfer (with a bucket, the vanilla milking timing is used).
+
 ## 1.1.2 — 2026-09-09
 - Reverted the placeholder Husbandry XP from 1.1.1: it was an arbitrary value. Vanilla's milking XP is computed by the engine (scaled by the animal's *Animal Care*) and cannot be reproduced by a fixed Lua number, so **no XP is granted for now** rather than risk unbalancing the game. A faithful option (routing through the vanilla milking so the real XP applies) is under consideration.
 

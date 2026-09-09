@@ -1,8 +1,8 @@
 {
 
   "Sandbox_MilkIntoBarrel": "Milk Into Barrels",
-  "Sandbox_MilkIntoBarrelDurationMultiplier": "Milking duration multiplier",
-  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "How long it takes to milk an animal into a barrel. 1.0 = fast, 2.0 = default (twice as long). Higher = slower.",
-  "Sandbox_MilkIntoBarrelRequireBucket": "Require a bucket",
-  "Sandbox_MilkIntoBarrelRequireBucket_tooltip": "If enabled, the player must carry a bucket (a container that can hold the milk) for the option to appear. Cosmetic - the bucket is not consumed."
+  "Sandbox_MilkIntoBarrelDurationMultiplier": "Milking duration multiplier (no-bucket only)",
+  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "Speed of the direct, no-bucket milking. 1.0 = fast, 2.0 = default (twice as long). Higher = slower. Only affects the no-bucket transfer; with a bucket the vanilla milking timing is used.",
+  "Sandbox_MilkIntoBarrelAllowNoBucket": "Allow milking without a bucket",
+  "Sandbox_MilkIntoBarrelAllowNoBucket_tooltip": "If enabled, players can milk straight into a barrel without a bucket. WARNING: milking without a bucket grants NO Husbandry XP (the real XP requires milking into a bucket first). Off by default: a bucket is required."
 }

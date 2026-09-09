@@ -79,16 +79,27 @@ function MB_Utils.getMilkBarrelsNear(square, distance)
     return barrels
 end
 
--- Option sandbox "Exiger un seau" (cosmetique) : true si non requis, ou si le joueur
--- porte un contenant capable d'accueillir ce lait. Fail-open si indeterminable.
-function MB_Utils.playerRequiresBucketOk(playerObj, animal)
-    if not (SandboxVars.MilkIntoBarrel and SandboxVars.MilkIntoBarrel.RequireBucket) then
-        return true
-    end
+-- Sandbox : autoriser la traite sans seau (off par defaut).
+function MB_Utils.allowNoBucket()
+    return SandboxVars.MilkIntoBarrel ~= nil and SandboxVars.MilkIntoBarrel.AllowNoBucket == true
+end
+
+-- Retourne un seau (contenant capable d'accueillir ce lait) porte par le joueur, sinon nil.
+function MB_Utils.getMilkBucket(playerObj, animal)
     local ok, milkType = pcall(function() return animal:getData():getBreed():getMilkType() end)
-    if not ok or not milkType then return true end
+    if not ok or not milkType then return nil end
     local list = playerObj:getInventory():getAvailableFluidContainer(milkType)
-    return list ~= nil and not list:isEmpty()
+    if list and not list:isEmpty() then return list:get(0) end
+    return nil
+end
+
+-- Mode de traite pour cet animal : "bucket" (via seau -> vraie XP), "nobucket" (sans seau,
+-- sans XP, si autorise par le sandbox), ou nil (pas possible).
+function MB_Utils.milkMode(playerObj, animal)
+    if not MB_Utils.isMilkable(animal) then return nil end
+    if MB_Utils.getMilkBucket(playerObj, animal) then return "bucket" end
+    if MB_Utils.allowNoBucket() then return "nobucket" end
+    return nil
 end
 
 return MB_Utils

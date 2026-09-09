@@ -2,9 +2,14 @@
 --  1) Clic droit sur un ANIMAL traiable  -> "Traire <animal> dans le baril"
 --  2) Clic droit sur un BARIL UB ouvert   -> "Traire <animal> dans le baril" (sous-menu si plusieurs)
 --  3) Radial (V) sur l'animal             -> meme tranche (fonctionne aussi sur animal sauvage)
--- Generique : tout animal traiable (vaches, brebis, chevres moddees...).
+--
+-- Deux modes selon la possession d'un seau :
+--   * "bucket"   : traite vanilla dans le seau (VRAIE XP moteur) puis versement auto seau -> baril.
+--   * "nobucket" : transfert direct animal -> baril, SANS XP (autorise via sandbox AllowNoBucket).
 
 require "TimedActions/MB_MilkIntoBarrelAction"
+require "TimedActions/MB_ThenPourAction"
+require "TimedActions/Animals/ISMilkAnimal"
 require "ISUI/Animal/ISAnimalContextMenu"
 -- ISWalkToTimedActionF est un global fourni par le jeu (pas de fichier a require).
 
@@ -12,20 +17,21 @@ local MB_Utils = require "MB_Utils"
 
 local MilkBarrel = {}
 
--- Lanceur commun : calque sur AnimalContextMenu.onMilkAnimal (vanilla).
+-- Lanceur commun. Selon le mode, enchaine soit la traite vanilla + versement, soit le transfert direct.
 function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
     if not animal or not barrelObj then return end
 
     animal:stopAllMovementNow()
     animal:getBehavior():setBlockMovement(true)
 
-    local vec = nil
+    -- position de traite (gauche/droite), comme la traite vanilla
+    local vec, right = nil, true
     local okR, vecRight = pcall(function() return animal:getAttachmentWorldPos("rightmilk") end)
     local okL, vecLeft  = pcall(function() return animal:getAttachmentWorldPos("leftmilk") end)
-    if okR and vecRight then vec = vecRight end
+    if okR and vecRight then vec = vecRight; right = true end
     if okL and vecLeft and vec and
        playerObj:DistToSquared(vecLeft:x(), vecLeft:y()) < playerObj:DistToSquared(vec:x(), vec:y()) then
-        vec = vecLeft
+        vec = vecLeft; right = false
     end
 
     if vec then
@@ -35,17 +41,28 @@ function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
         if sq then luautils.walkAdj(playerObj, sq) end
     end
 
-    ISTimedActionQueue.add(MB_MilkIntoBarrelAction:new(playerObj, animal, barrelObj))
+    local bucket = MB_Utils.getMilkBucket(playerObj, animal)
+    if bucket then
+        -- traite vanilla dans le seau (vraie XP), puis versement auto seau -> baril
+        ISTimedActionQueue.add(ISMilkAnimal:new(playerObj, animal, bucket, right, false))
+        ISTimedActionQueue.add(MB_ThenPourAction:new(playerObj, bucket, barrelObj))
+    else
+        -- pas de seau : transfert direct (sans XP), autorise par le sandbox
+        ISTimedActionQueue.add(MB_MilkIntoBarrelAction:new(playerObj, animal, barrelObj))
+    end
 end
 
--- Libelle unifie : "Traire <animal> dans le baril"
 local function milkOptionText(animal)
     return getText("ContextMenu_MilkBarrel_MilkAnimal", animal:getFullName())
 end
 
--- L'animal est-il eligible (traiable + option "seau" satisfaite) ?
-local function animalEligible(playerObj, animal)
-    return MB_Utils.isMilkable(animal) and MB_Utils.playerRequiresBucketOk(playerObj, animal)
+-- Ajoute une info-bulle "sans XP" quand on est en mode nobucket.
+local function tagNoXp(option, mode)
+    if mode == "nobucket" and option then
+        local tt = ISWorldObjectContextMenu.addToolTip()
+        tt.description = getText("ContextMenu_MilkBarrel_NoXp")
+        option.toolTip = tt
+    end
 end
 
 -- Premier baril ouvert compatible autour d'une case, sinon nil.
@@ -65,7 +82,8 @@ function MilkBarrel.onClickedAnimalForContext(player, context, animals, test)
     if not playerObj then return end
 
     for _, animal in ipairs(animals) do
-        if animalEligible(playerObj, animal) then
+        local mode = MB_Utils.milkMode(playerObj, animal)
+        if mode then
             local sq = animal:getSquare() or animal:getCurrentSquare()
             local barrel = firstAcceptingBarrel(sq, MB_Utils.resolveMilkFluid(animal))
             if barrel then
@@ -73,6 +91,7 @@ function MilkBarrel.onClickedAnimalForContext(player, context, animals, test)
                     milkOptionText(animal),
                     playerObj, MilkBarrel.onMilkIntoBarrel, animal, barrel.isoObject)
                 if barrel.icon then option.iconTexture = barrel.icon end
+                tagNoXp(option, mode)
             end
         end
     end
@@ -87,28 +106,30 @@ function MilkBarrel.onFillWorldObjectContextMenu(player, context, worldobjects, 
     local barrel = MB_Utils.getMilkBarrel(worldobjects)
     if not barrel or not barrel.square then return end
 
-    local milkable = {}
+    local candidates = {}
     for _, animal in ipairs(MB_Utils.getMilkableAnimalsNear(barrel.square, MB_Utils.SCAN_DISTANCE)) do
-        if animalEligible(playerObj, animal)
-           and MB_Utils.barrelAcceptsMilk(barrel, MB_Utils.resolveMilkFluid(animal)) then
-            table.insert(milkable, animal)
+        local mode = MB_Utils.milkMode(playerObj, animal)
+        if mode and MB_Utils.barrelAcceptsMilk(barrel, MB_Utils.resolveMilkFluid(animal)) then
+            table.insert(candidates, { animal = animal, mode = mode })
         end
     end
-    if #milkable == 0 then return end
+    if #candidates == 0 then return end
 
-    if #milkable == 1 then
-        local animal = milkable[1]
+    if #candidates == 1 then
+        local c = candidates[1]
         local option = context:addOption(
-            milkOptionText(animal),
-            playerObj, MilkBarrel.onMilkIntoBarrel, animal, barrel.isoObject)
+            milkOptionText(c.animal),
+            playerObj, MilkBarrel.onMilkIntoBarrel, c.animal, barrel.isoObject)
         if barrel.icon then option.iconTexture = barrel.icon end
+        tagNoXp(option, c.mode)
     else
         local parent = context:addOption(getText("ContextMenu_Milk"))
         if barrel.icon then parent.iconTexture = barrel.icon end
         local sub = ISContextMenu:getNew(context)
         context:addSubMenu(parent, sub)
-        for _, animal in ipairs(milkable) do
-            sub:addOption(animal:getFullName(), playerObj, MilkBarrel.onMilkIntoBarrel, animal, barrel.isoObject)
+        for _, c in ipairs(candidates) do
+            local opt = sub:addOption(c.animal:getFullName(), playerObj, MilkBarrel.onMilkIntoBarrel, c.animal, barrel.isoObject)
+            tagNoXp(opt, c.mode)
         end
     end
 end
@@ -133,7 +154,8 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
         local dbg = getDebug()
         local animal = AnimalContextMenu.getAnimalToInteractWith(playerObj)
         if not animal then if dbg then print("[MilkBarrel] radial: pas d'animal utilisable") end return end
-        if not animalEligible(playerObj, animal) then if dbg then print("[MilkBarrel] radial: animal non eligible (traiable/seau)") end return end
+        local mode = MB_Utils.milkMode(playerObj, animal)
+        if not mode then if dbg then print("[MilkBarrel] radial: animal non traiable ou pas de seau (AllowNoBucket off)") end return end
 
         local barrel = firstAcceptingBarrel(animal:getSquare() or animal:getCurrentSquare(), MB_Utils.resolveMilkFluid(animal))
         if not barrel then if dbg then print("[MilkBarrel] radial: aucun baril ouvert compatible a proximite") end return end
@@ -158,7 +180,7 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
                 setJoypadFocus(pi, menu)
             end
         end
-        if dbg then print("[MilkBarrel] radial: tranche ajoutee (roue deja visible=" .. tostring(nowVisible) .. ")") end
+        if dbg then print("[MilkBarrel] radial: tranche ajoutee (mode=" .. tostring(mode) .. ", roue deja visible=" .. tostring(nowVisible) .. ")") end
     end
 end
 
