@@ -1,0 +1,33 @@
+[h1]Milk Into Barrels[/h1]
+A small add-on for [b]Useful Barrels[/b]: milk your animals straight into a barrel!
+
+[b]This is my very first mod[/b] — I'm not a developer, I put this together for fun and for my own server. Please be kind, and constructive feedback is very welcome. :)
+
+[h1]What it does[/h1]
+Place an open [b]Useful Barrels[/b] barrel next to a milkable animal and milk it [b]directly into the barrel[/b] — no bucket needed.
+
+Three ways to trigger it:
+[list]
+[*] Right-click the animal -> "Milk ... into the barrel"
+[*] Right-click the barrel -> "Milk ... into the barrel"
+[*] Radial menu (V key) near the animal
+[/list]
+
+Works with [b]any milkable animal[/b] (cows, sheep... and animals added by other mods). The milk type matches the animal.
+
+[b]Requirements:[/b] an open barrel (empty, or already holding the same milk) within ~3 tiles, and an animal that has milk.
+
+[h1]Dependency[/h1]
+[b]Useful Barrels[/b] — required (make sure it's enabled too):
+https://steamcommunity.com/sharedfiles/filedetails/?id=3436537035
+
+[h1]Status[/h1]
+[*] Tested and working in [b]single-player[/b].
+[*] [b]Multiplayer testing in progress[/b] — the transfer is computed server-side. If you spot an issue in MP, please leave a comment. Thanks!
+
+[h1]Compatibility[/h1]
+Build 42. This is an add-on: it doesn't replace anything in Useful Barrels.
+
+----------------------------------------------------------------------
+Short summary (for the summary field if needed):
+Useful Barrels add-on: milk cows, sheep & co. straight into a barrel. Single-player OK, MP in testing. My first mod!
