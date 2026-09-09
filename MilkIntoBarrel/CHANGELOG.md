@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.1.1 — 2026-09-09
+- Fix: the player now correctly **gains Husbandry XP** when milking into a barrel (a faulty guard was skipping the XP grant). XP now scales with the amount milked.
+
 ## 1.1.0 — 2026-09-09
 - New: **sandbox options** (server-configurable):
   - *Milking duration multiplier* (default **2.0** = twice as long as the very first build; lower = faster).

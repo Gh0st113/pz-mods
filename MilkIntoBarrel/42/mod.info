@@ -1,6 +1,6 @@
 name=Traire dans le baril (Milk into Barrel)
 id=MilkIntoBarrel
-modversion=1.1.0
+modversion=1.1.1
 description=Traire un animal (vache, brebis...) directement dans un baril Useful Barrels ouvert a proximite. Clic droit sur l'animal ou sur le baril, ou menu radial V. Addon de Useful Barrels, MP-safe.
 versionMin=42.13
 require=UsefulBarrelsMP

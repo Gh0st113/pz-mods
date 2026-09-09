@@ -125,8 +125,14 @@ function MB_MilkIntoBarrelAction:complete()
 
     self.animal:getBehavior():setBlockMovement(false)
 
-    if self.character.getXp and self.character:getXp() then
-        self.character:getXp():AddXP(Perks.Husbandry, 2)
+    -- XP Husbandry cote joueur : client (MP) ou solo. Pas sur le serveur (perso distant).
+    -- Appel direct (l'ancienne garde self.character.getXp via '.' renvoyait nil -> XP jamais donnee).
+    if not isServer() then
+        local xp = self.character:getXp()
+        if xp then
+            local amount = math.max(2, math.ceil(self.amountToTransfer or 0))
+            xp:AddXP(Perks.Husbandry, amount)
+        end
     end
     return true
 end
