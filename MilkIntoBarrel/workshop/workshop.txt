@@ -1,12 +1,12 @@
 version=1
 id=3798667277
 title=Milk Into Barrels
-description=A small add-on for [b]Useful Barrels[/b]: milk your animals straight into a barrel!
+description=A small add-on for [url=https://steamcommunity.com/workshop/filedetails/?id=3436537035]Useful Barrels[/url]: milk your animals straight into a barrel!
 description=
 description=[b]This is my very first mod[/b] - I'm not a developer, I put this together for fun and for my own server. Please be kind, and constructive feedback is very welcome. :)
 description=
 description=[h1]What it does[/h1]
-description=Place an open [b]Useful Barrels[/b] barrel next to a milkable animal and milk it [b]directly into the barrel[/b] - no bucket needed.
+description=Stand next to a milkable animal with an open [url=https://steamcommunity.com/workshop/filedetails/?id=3436537035]Useful Barrels[/url] barrel nearby and milk it: the milk goes into your bucket and is [b]automatically poured into the barrel[/b]. You gain normal Husbandry XP, exactly like regular milking.
 description=
 description=Three ways to trigger it:
 description=[list]
@@ -17,13 +17,20 @@ description=[/list]
 description=
 description=Works with [b]any milkable animal[/b] (cows, sheep... and animals added by other mods). The milk type matches the animal.
 description=
-description=Requires an open barrel (empty, or already holding the same milk) within ~3 tiles, and an animal that has milk.
+description=[b]You need a bucket[/b] (any container that can hold the milk) and an open barrel (empty, or already holding the same milk) within ~3 tiles.
 description=
-description=[h1]Dependency[/h1]
-description=[b]Useful Barrels[/b] - required (make sure it's enabled too).
+description=[h1]Sandbox options[/h1]
+description=[list]
+description=[*] Allow milking without a bucket (off by default) - convenient, but grants no Husbandry XP.
+description=[*] Milking duration multiplier (applies to the no-bucket mode).
+description=[/list]
+description=
+description=[h1]Dependency & thanks[/h1]
+description=Requires [url=https://steamcommunity.com/workshop/filedetails/?id=3436537035]Useful Barrels[/url] - make sure it's enabled too.
+description=Big thanks to [b]GigaWatte[/b] (and [b]SP4RTAN[/b], who maintains it) for Useful Barrels - this add-on builds on their barrel fluid system. :)
 description=
 description=[h1]Status[/h1]
-description=Tested and working in single-player. Multiplayer testing in progress (the transfer is computed server-side). If you spot an issue in MP, please leave a comment. Thanks!
+description=Tested in single-player. Multiplayer testing in progress (the transfer is computed server-side). If you spot an issue in MP, please leave a comment. Thanks!
 description=
 description=[h1]Compatibility[/h1]
 description=Build 42. This is an add-on: it doesn't replace anything in Useful Barrels.
