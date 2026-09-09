@@ -4,9 +4,9 @@ Mods Project Zomboid (Build 42) de Alpha13. Un sous-dossier par mod.
 
 ## Mods
 
-| Mod | Description | Dépendances |
-|-----|-------------|-------------|
-| [MilkIntoBarrel](MilkIntoBarrel/) | Traire un animal directement dans un baril à proximité | [Useful Barrels](https://steamcommunity.com/sharedfiles/filedetails/?id=3436537035) |
+| Mod | Description | Workshop | Dépendances |
+|-----|-------------|----------|-------------|
+| [MilkIntoBarrel](MilkIntoBarrel/) | Traire un animal directement dans un baril à proximité | [3798667277](https://steamcommunity.com/sharedfiles/filedetails/?id=3798667277) | [Useful Barrels](https://steamcommunity.com/sharedfiles/filedetails/?id=3436537035) |
 
 ## Développement
 

@@ -1,5 +1,7 @@
 # Traire dans le baril (MilkIntoBarrel)
 
+**Publié sur le Steam Workshop :** https://steamcommunity.com/sharedfiles/filedetails/?id=3798667277 (id `3798667277`)
+
 Addon de **[Useful Barrels](https://steamcommunity.com/sharedfiles/filedetails/?id=3436537035)** pour Project Zomboid **Build 42**.
 
 Permet de **traire un animal directement dans un baril Useful Barrels ouvert** posé à proximité — le pendant, pour les animaux, du siphonnage baril↔véhicule d'Useful Barrels.
