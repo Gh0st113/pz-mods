@@ -6,6 +6,8 @@ Addon de **[Useful Barrels](https://steamcommunity.com/sharedfiles/filedetails/?
 
 Permet de **traire un animal directement dans un baril Useful Barrels ouvert** posé à proximité — le pendant, pour les animaux, du siphonnage baril↔véhicule d'Useful Barrels.
 
+> 🌍 **Traducteurs bienvenus** — le mod est prêt pour la traduction (tout le texte est externalisé en JSON, EN + FR fournis). Voir [TRANSLATIONS.md](TRANSLATIONS.md) : 3 étapes, ~7 courtes chaînes.
+
 ## Utilisation en jeu
 
 Trois façons de déclencher l'action (l'option n'apparaît que si les conditions sont réunies) :

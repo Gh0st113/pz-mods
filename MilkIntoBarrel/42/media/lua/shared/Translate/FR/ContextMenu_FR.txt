@@ -1,4 +1,0 @@
-ContextMenu_FR = {
-    ContextMenu_MilkBarrel_MilkAnimal = "Traire %1 dans le baril"
-    ContextMenu_MilkBarrel_NoXp = "Sans seau : traire directement dans le baril ne donne aucune XP d'Elevage."
-}

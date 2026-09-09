@@ -1,4 +1,0 @@
-ContextMenu_EN = {
-    ContextMenu_MilkBarrel_MilkAnimal = "Milk %1 into the barrel"
-    ContextMenu_MilkBarrel_NoXp = "No bucket: milking straight into the barrel grants no Husbandry XP."
-}
