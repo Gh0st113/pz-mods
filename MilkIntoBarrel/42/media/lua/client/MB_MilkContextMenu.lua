@@ -162,7 +162,7 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
 
         menu:addSlice(
             milkOptionText(animal),
-            getTexture("media/ui/AnimalActions_Milk.png"),
+            getTexture("media/ui/MilkIntoBarrel_Milk.png"),  -- icone propre au mod (baril + goutte), pas le seau vanilla
             MilkBarrel.onMilkIntoBarrel, playerObj, animal, barrel.isoObject)
 
         menu:setX(getPlayerScreenLeft(pi) + getPlayerScreenWidth(pi) / 2 - menu:getWidth() / 2)

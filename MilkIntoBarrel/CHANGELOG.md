@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.2 — 2026-09-09
+- The radial menu (V) option now uses a **custom icon** (a barrel with a milk drop) instead of the vanilla milk-bucket icon, so it no longer looks identical to the normal "Milk" option.
+
 ## 1.2.1 — 2026-09-09
 - Fix: the milk now actually **pours into the barrel**. The previous version chained a separate pour action after milking, but vanilla milking ends with a force-stop that cancelled it — so nothing was transferred. Milking + pouring now happen inside a single action.
 - Milking now **empties the whole animal across several buckets** if needed, and pours all of them into the barrel (up to the barrel's free capacity; any leftover stays in the buckets).
