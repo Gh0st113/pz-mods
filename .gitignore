@@ -1,0 +1,7 @@
+# Fichiers parasites Windows / OneDrive
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.tmp
+*.log
