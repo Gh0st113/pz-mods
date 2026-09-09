@@ -2,6 +2,10 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.1 — 2026-09-09
+- Fix: the milk now actually **pours into the barrel**. The previous version chained a separate pour action after milking, but vanilla milking ends with a force-stop that cancelled it — so nothing was transferred. Milking + pouring now happen inside a single action.
+- Milking now **empties the whole animal across several buckets** if needed, and pours all of them into the barrel (up to the barrel's free capacity; any leftover stays in the buckets).
+
 ## 1.2.0 — 2026-09-09
 - **Real Husbandry XP.** Milking now routes through the vanilla milking action into a bucket — so you get the exact engine-computed XP (scaled by the animal's Animal Care), the correct amounts, and the stress mechanic — then the milk is **automatically poured from the bucket into the barrel**. A bucket is required by default.
 - New sandbox option **"Allow milking without a bucket"** (off by default): permits the old direct animal->barrel transfer when the player has no bucket, but it grants **no XP** (a tooltip warns about it).

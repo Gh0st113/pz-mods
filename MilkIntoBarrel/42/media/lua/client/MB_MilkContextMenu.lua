@@ -8,8 +8,7 @@
 --   * "nobucket" : transfert direct animal -> baril, SANS XP (autorise via sandbox AllowNoBucket).
 
 require "TimedActions/MB_MilkIntoBarrelAction"
-require "TimedActions/MB_ThenPourAction"
-require "TimedActions/Animals/ISMilkAnimal"
+require "TimedActions/MB_MilkAnimalToBarrelAction"
 require "ISUI/Animal/ISAnimalContextMenu"
 -- ISWalkToTimedActionF est un global fourni par le jeu (pas de fichier a require).
 
@@ -43,9 +42,8 @@ function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
 
     local bucket = MB_Utils.getMilkBucket(playerObj, animal)
     if bucket then
-        -- traite vanilla dans le seau (vraie XP), puis versement auto seau -> baril
-        ISTimedActionQueue.add(ISMilkAnimal:new(playerObj, animal, bucket, right, false))
-        ISTimedActionQueue.add(MB_ThenPourAction:new(playerObj, bucket, barrelObj))
+        -- traite vanilla dans le seau (vraie XP) + versement interne seau -> baril a la fin
+        ISTimedActionQueue.add(MB_MilkAnimalToBarrelAction:new(playerObj, animal, bucket, right, barrelObj))
     else
         -- pas de seau : transfert direct (sans XP), autorise par le sandbox
         ISTimedActionQueue.add(MB_MilkIntoBarrelAction:new(playerObj, animal, barrelObj))
@@ -151,14 +149,11 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
         if not playerObj or not menu then return end
         if wasVisible then return end   -- c'etait un toggle-off : ne rien faire
 
-        local dbg = getDebug()
         local animal = AnimalContextMenu.getAnimalToInteractWith(playerObj)
-        if not animal then if dbg then print("[MilkBarrel] radial: pas d'animal utilisable") end return end
-        local mode = MB_Utils.milkMode(playerObj, animal)
-        if not mode then if dbg then print("[MilkBarrel] radial: animal non traiable ou pas de seau (AllowNoBucket off)") end return end
+        if not animal or not MB_Utils.milkMode(playerObj, animal) then return end
 
         local barrel = firstAcceptingBarrel(animal:getSquare() or animal:getCurrentSquare(), MB_Utils.resolveMilkFluid(animal))
-        if not barrel then if dbg then print("[MilkBarrel] radial: aucun baril ouvert compatible a proximite") end return end
+        if not barrel then return end
 
         local nowVisible = menu:isReallyVisible()
         if not nowVisible then
@@ -180,7 +175,6 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
                 setJoypadFocus(pi, menu)
             end
         end
-        if dbg then print("[MilkBarrel] radial: tranche ajoutee (mode=" .. tostring(mode) .. ", roue deja visible=" .. tostring(nowVisible) .. ")") end
     end
 end
 
