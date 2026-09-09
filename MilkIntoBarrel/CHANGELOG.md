@@ -2,8 +2,11 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.1.2 — 2026-09-09
+- Reverted the placeholder Husbandry XP from 1.1.1: it was an arbitrary value. Vanilla's milking XP is computed by the engine (scaled by the animal's *Animal Care*) and cannot be reproduced by a fixed Lua number, so **no XP is granted for now** rather than risk unbalancing the game. A faithful option (routing through the vanilla milking so the real XP applies) is under consideration.
+
 ## 1.1.1 — 2026-09-09
-- Fix: the player now correctly **gains Husbandry XP** when milking into a barrel (a faulty guard was skipping the XP grant). XP now scales with the amount milked.
+- (superseded by 1.1.2) Attempted to grant Husbandry XP with a placeholder value; removed because it was not the real vanilla calculation.
 
 ## 1.1.0 — 2026-09-09
 - New: **sandbox options** (server-configurable):

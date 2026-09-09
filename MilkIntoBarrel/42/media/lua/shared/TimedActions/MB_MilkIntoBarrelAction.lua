@@ -125,15 +125,12 @@ function MB_MilkIntoBarrelAction:complete()
 
     self.animal:getBehavior():setBlockMovement(false)
 
-    -- XP Husbandry cote joueur : client (MP) ou solo. Pas sur le serveur (perso distant).
-    -- Appel direct (l'ancienne garde self.character.getXp via '.' renvoyait nil -> XP jamais donnee).
-    if not isServer() then
-        local xp = self.character:getXp()
-        if xp then
-            local amount = math.max(2, math.ceil(self.amountToTransfer or 0))
-            xp:AddXP(Perks.Husbandry, amount)
-        end
-    end
+    -- Pas d'XP Elevage octroyee ici volontairement.
+    -- L'XP de traite vanilla est calculee dans le moteur (Java, via animal:milkAnimal),
+    -- ponderee par l'attribut "Animal Care" de la bete : elle n'est pas reproductible par
+    -- une valeur fixe cote Lua. Mettre un nombre arbitraire deseequilibrerait le jeu.
+    -- Pour octroyer la VRAIE XP, il faudrait router la traite via le milkAnimal vanilla
+    -- (traite dans un seau puis transfert vers le baril) -- a decider avec l'auteur.
     return true
 end
 
