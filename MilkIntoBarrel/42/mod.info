@@ -3,4 +3,6 @@ id=MilkIntoBarrel
 description=Traire un animal (vache, brebis...) directement dans un baril Useful Barrels ouvert a proximite. Clic droit sur l'animal ou sur le baril, ou menu radial V. Addon de Useful Barrels, MP-safe.
 versionMin=42.13
 require=UsefulBarrelsMP
+poster=poster.png
+icon=icon.png
 author=Alpha13
