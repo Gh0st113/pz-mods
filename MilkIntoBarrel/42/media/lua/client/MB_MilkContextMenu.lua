@@ -1,8 +1,8 @@
 -- MB_MilkContextMenu : les points d'entree en jeu.
---  1) Clic droit sur un ANIMAL traiable  -> "Traire <animal> dans le baril" (si un baril ouvert compatible est proche)
---  2) Clic droit sur un BARIL UB ouvert   -> "Traire <animal> dans le baril" (sous-menu si plusieurs animaux)
---  3) Radial (V) sur l'animal             -> meme tranche
--- Generique : marche pour tout animal traiable (vaches, brebis, chevres moddees...).
+--  1) Clic droit sur un ANIMAL traiable  -> "Traire <animal> dans le baril"
+--  2) Clic droit sur un BARIL UB ouvert   -> "Traire <animal> dans le baril" (sous-menu si plusieurs)
+--  3) Radial (V) sur l'animal             -> meme tranche (fonctionne aussi sur animal sauvage)
+-- Generique : tout animal traiable (vaches, brebis, chevres moddees...).
 
 require "TimedActions/MB_MilkIntoBarrelAction"
 require "ISUI/Animal/ISAnimalContextMenu"
@@ -13,7 +13,6 @@ local MB_Utils = require "MB_Utils"
 local MilkBarrel = {}
 
 -- Lanceur commun : calque sur AnimalContextMenu.onMilkAnimal (vanilla).
--- On bloque l'animal tout de suite, on marche vers le pis, puis on lance l'action.
 function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
     if not animal or not barrelObj then return end
 
@@ -44,6 +43,11 @@ local function milkOptionText(animal)
     return getText("ContextMenu_MilkBarrel_MilkAnimal", animal:getFullName())
 end
 
+-- L'animal est-il eligible (traiable + option "seau" satisfaite) ?
+local function animalEligible(playerObj, animal)
+    return MB_Utils.isMilkable(animal) and MB_Utils.playerRequiresBucketOk(playerObj, animal)
+end
+
 -- Premier baril ouvert compatible autour d'une case, sinon nil.
 local function firstAcceptingBarrel(sq, milkFluid)
     for _, barrel in ipairs(MB_Utils.getMilkBarrelsNear(sq, MB_Utils.SCAN_DISTANCE)) do
@@ -61,7 +65,7 @@ function MilkBarrel.onClickedAnimalForContext(player, context, animals, test)
     if not playerObj then return end
 
     for _, animal in ipairs(animals) do
-        if MB_Utils.isMilkable(animal) then
+        if animalEligible(playerObj, animal) then
             local sq = animal:getSquare() or animal:getCurrentSquare()
             local barrel = firstAcceptingBarrel(sq, MB_Utils.resolveMilkFluid(animal))
             if barrel then
@@ -85,7 +89,8 @@ function MilkBarrel.onFillWorldObjectContextMenu(player, context, worldobjects, 
 
     local milkable = {}
     for _, animal in ipairs(MB_Utils.getMilkableAnimalsNear(barrel.square, MB_Utils.SCAN_DISTANCE)) do
-        if MB_Utils.barrelAcceptsMilk(barrel, MB_Utils.resolveMilkFluid(animal)) then
+        if animalEligible(playerObj, animal)
+           and MB_Utils.barrelAcceptsMilk(barrel, MB_Utils.resolveMilkFluid(animal)) then
             table.insert(milkable, animal)
         end
     end
@@ -109,32 +114,51 @@ function MilkBarrel.onFillWorldObjectContextMenu(player, context, worldobjects, 
 end
 
 -- ============================ RADIAL ANIMAL (touche V) ============================
--- On enveloppe AnimalContextMenu.showRadialMenu pour ajouter notre tranche.
+-- Enveloppe AnimalContextMenu.showRadialMenu. Le radial vanilla ABANDONNE si l'animal
+-- est sauvage (isWild) ; on gere ce cas en construisant nous-memes la roue.
 if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._radialPatched then
     MilkBarrel._radialPatched = true
     local origShowRadial = AnimalContextMenu.showRadialMenu
+
     AnimalContextMenu.showRadialMenu = function(playerObj)
+        local pi = playerObj and playerObj:getPlayerNum() or 0
+        local menu = playerObj and getPlayerRadialMenu(pi) or nil
+        local wasVisible = menu and menu:isReallyVisible() or false
+
         origShowRadial(playerObj)
-        if not playerObj then return end
-        local pi = playerObj:getPlayerNum()
-        local menu = getPlayerRadialMenu(pi)
-        if not menu or not menu:isReallyVisible() then return end
 
+        if not playerObj or not menu then return end
+        if wasVisible then return end   -- c'etait un toggle-off : ne rien faire
+
+        local dbg = getDebug()
         local animal = AnimalContextMenu.getAnimalToInteractWith(playerObj)
-        if not animal or not MB_Utils.isMilkable(animal) then return end
+        if not animal then if dbg then print("[MilkBarrel] radial: pas d'animal utilisable") end return end
+        if not animalEligible(playerObj, animal) then if dbg then print("[MilkBarrel] radial: animal non eligible (traiable/seau)") end return end
 
-        local barrel = firstAcceptingBarrel(
-            animal:getSquare() or animal:getCurrentSquare(),
-            MB_Utils.resolveMilkFluid(animal))
-        if not barrel then return end
+        local barrel = firstAcceptingBarrel(animal:getSquare() or animal:getCurrentSquare(), MB_Utils.resolveMilkFluid(animal))
+        if not barrel then if dbg then print("[MilkBarrel] radial: aucun baril ouvert compatible a proximite") end return end
+
+        local nowVisible = menu:isReallyVisible()
+        if not nowVisible then
+            menu:clear()   -- vanilla a abandonne (ex. animal sauvage) : on construit la roue nous-memes
+        end
 
         menu:addSlice(
             milkOptionText(animal),
             getTexture("media/ui/AnimalActions_Milk.png"),
             MilkBarrel.onMilkIntoBarrel, playerObj, animal, barrel.isoObject)
-        -- recentre le radial car on a ajoute une tranche apres coup
+
         menu:setX(getPlayerScreenLeft(pi) + getPlayerScreenWidth(pi) / 2 - menu:getWidth() / 2)
         menu:setY(getPlayerScreenTop(pi) + getPlayerScreenHeight(pi) / 2 - menu:getHeight() / 2)
+
+        if not nowVisible then
+            menu:addToUIManager()
+            if getJoypadData and getJoypadData(pi) then
+                menu:setHideWhenButtonReleased(Joypad.DPadUp)
+                setJoypadFocus(pi, menu)
+            end
+        end
+        if dbg then print("[MilkBarrel] radial: tranche ajoutee (roue deja visible=" .. tostring(nowVisible) .. ")") end
     end
 end
 

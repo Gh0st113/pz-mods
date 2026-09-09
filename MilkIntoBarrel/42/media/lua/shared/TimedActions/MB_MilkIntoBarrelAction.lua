@@ -9,7 +9,16 @@ local MB_Utils = require "MB_Utils"
 
 MB_MilkIntoBarrelAction = ISBaseTimedAction:derive("MB_MilkIntoBarrelAction")
 
-local MILK_RATE = 60   -- ticks de temps par litre (double de la 1re version : traite plus posee)
+local BASE_RATE = 30   -- ticks de temps par litre (base de reference)
+
+-- Debit effectif = base x multiplicateur sandbox (defaut 2.0 = deux fois plus lent).
+local function getRate()
+    local mult = 2.0
+    if SandboxVars.MilkIntoBarrel and SandboxVars.MilkIntoBarrel.DurationMultiplier then
+        mult = SandboxVars.MilkIntoBarrel.DurationMultiplier
+    end
+    return BASE_RATE * mult
+end
 
 function MB_MilkIntoBarrelAction:isValid()
     if not self.barrel or not self.animal then return false end
@@ -75,7 +84,7 @@ end
 
 function MB_MilkIntoBarrelAction:serverStart()
     self.animal:getBehavior():setBlockMovement(true)
-    local period = MILK_RATE * 20
+    local period = getRate() * 20
     emulateAnimEvent(self.netAction, period, "update", nil)
 end
 
@@ -140,7 +149,7 @@ function MB_MilkIntoBarrelAction:getDuration()
     if self.character:isTimedActionInstant() then
         return 1
     end
-    return math.max(1, self.amountToTransfer * MILK_RATE)
+    return math.max(1, self.amountToTransfer * getRate())
 end
 
 function MB_MilkIntoBarrelAction:new(character, animal, barrelObj)

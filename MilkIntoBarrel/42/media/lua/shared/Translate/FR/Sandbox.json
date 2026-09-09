@@ -1,0 +1,8 @@
+{
+
+  "Sandbox_MilkIntoBarrel": "Traire dans le baril",
+  "Sandbox_MilkIntoBarrelDurationMultiplier": "Multiplicateur de duree de traite",
+  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "Temps pour traire un animal dans un baril. 1.0 = rapide, 2.0 = defaut (deux fois plus long). Plus haut = plus lent.",
+  "Sandbox_MilkIntoBarrelRequireBucket": "Exiger un seau",
+  "Sandbox_MilkIntoBarrelRequireBucket_tooltip": "Si active, le joueur doit avoir un seau sur lui (un contenant pouvant tenir le lait) pour voir l'option. Cosmetique - le seau n'est pas consomme."
+}

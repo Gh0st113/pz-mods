@@ -1,0 +1,7 @@
+VERSION = 1,
+
+option MilkIntoBarrel.DurationMultiplier
+{type = double, min = 0.25, max = 5.0, default = 2.0, page = MilkIntoBarrel, translation = MilkIntoBarrelDurationMultiplier,}
+
+option MilkIntoBarrel.RequireBucket
+{type = boolean, default = false, page = MilkIntoBarrel, translation = MilkIntoBarrelRequireBucket,}

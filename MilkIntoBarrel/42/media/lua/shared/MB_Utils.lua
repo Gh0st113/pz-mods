@@ -79,4 +79,16 @@ function MB_Utils.getMilkBarrelsNear(square, distance)
     return barrels
 end
 
+-- Option sandbox "Exiger un seau" (cosmetique) : true si non requis, ou si le joueur
+-- porte un contenant capable d'accueillir ce lait. Fail-open si indeterminable.
+function MB_Utils.playerRequiresBucketOk(playerObj, animal)
+    if not (SandboxVars.MilkIntoBarrel and SandboxVars.MilkIntoBarrel.RequireBucket) then
+        return true
+    end
+    local ok, milkType = pcall(function() return animal:getData():getBreed():getMilkType() end)
+    if not ok or not milkType then return true end
+    local list = playerObj:getInventory():getAvailableFluidContainer(milkType)
+    return list ~= nil and not list:isEmpty()
+end
+
 return MB_Utils
