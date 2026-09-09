@@ -9,7 +9,7 @@ local MB_Utils = require "MB_Utils"
 
 MB_MilkIntoBarrelAction = ISBaseTimedAction:derive("MB_MilkIntoBarrelAction")
 
-local MILK_RATE = 30   -- ticks de temps par litre (lent, ~ ressenti vanilla timePerLiter=40)
+local MILK_RATE = 60   -- ticks de temps par litre (double de la 1re version : traite plus posee)
 
 function MB_MilkIntoBarrelAction:isValid()
     if not self.barrel or not self.animal then return false end
