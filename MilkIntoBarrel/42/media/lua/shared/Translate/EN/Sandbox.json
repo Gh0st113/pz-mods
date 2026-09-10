@@ -1,8 +1,8 @@
 {
 
-  "Sandbox_MilkIntoBarrel": "Milk Into Barrels — v1.2.6",
+  "Sandbox_MilkIntoBarrel": "Milk Into Barrels — v1.2.7",
   "Sandbox_MilkIntoBarrelDurationMultiplier": "Milking duration multiplier (no-bucket only)",
-  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "No-bucket milking speed (approximate, not exactly vanilla). Default 10 ≈ the bucket-milking rate; higher = slower. No effect if you carry a bucket.",
+  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "No-bucket milking speed (~vanilla). Higher = slower. No effect with a bucket.",
   "Sandbox_MilkIntoBarrelAllowNoBucket": "Allow milking without a bucket (hybrid)",
   "Sandbox_MilkIntoBarrelAllowNoBucket_tooltip": "OFF (default): a bucket is required to milk into the barrel. ON (hybrid): you can also milk without a bucket - WITH a bucket you get the normal Husbandry XP; WITHOUT a bucket the milk still goes into the barrel but grants NO XP."
 }

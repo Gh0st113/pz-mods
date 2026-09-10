@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.7 — 2026-09-10
+- Shorter sandbox tooltip: "No-bucket milking speed (~vanilla). Higher = slower. No effect with a bucket." (Uses "~" rather than "≈", which PZ's font renders as "?".)
+
 ## 1.2.6 — 2026-09-10
 - **Mod version display fixed.** The version was shown as an editable text field in the sandbox options (users could change it). It's now shown in the **section header** ("Milk Into Barrels — v1.2.6") with no editable control, and the editable option was removed.
 
