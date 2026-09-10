@@ -152,12 +152,20 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
         local animal = AnimalContextMenu.getAnimalToInteractWith(playerObj)
         if not animal or not MB_Utils.milkMode(playerObj, animal) then return end
 
-        local barrel = firstAcceptingBarrel(animal:getSquare() or animal:getCurrentSquare(), MB_Utils.resolveMilkFluid(animal))
+        local animalSq = animal:getSquare() or animal:getCurrentSquare()
+        local barrel = firstAcceptingBarrel(animalSq, MB_Utils.resolveMilkFluid(animal))
         if not barrel then return end
 
         local nowVisible = menu:isReallyVisible()
         if not nowVisible then
-            menu:clear()   -- vanilla a abandonne (ex. animal sauvage) : on construit la roue nous-memes
+            -- Vanilla a abandonne (animal sauvage). On ne construit NOTRE PROPRE roue que si le
+            -- joueur est vraiment a cote de l'animal ; sinon une tranche "Milk" apparaitrait
+            -- "dans le vide" (getUseableAnimal peut renvoyer un animal un peu trop loin).
+            local psq = playerObj:getSquare()
+            if not animalSq or not psq or psq:DistTo(animalSq) > 2 then
+                return
+            end
+            menu:clear()   -- on construit la roue nous-memes pour cet animal sauvage tout proche
         end
 
         menu:addSlice(

@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.3 — 2026-09-10
+- Fix: a stray "Milk into the barrel" slice could appear in the radial menu (V) "in the void" (e.g. inside a house) when a milkable animal happened to be loosely nearby. The radial slice is now only built when you're actually next to the animal.
+
 ## 1.2.2 — 2026-09-09
 - The radial menu (V) option now uses a **custom icon** (a barrel with a milk drop) instead of the vanilla milk-bucket icon, so it no longer looks identical to the normal "Milk" option.
 
