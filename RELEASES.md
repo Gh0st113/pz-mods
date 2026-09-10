@@ -11,8 +11,10 @@ Steam version and the version being uploaded** should be listed.
 
 | Channel | Version | Notes |
 |---|---|---|
-| 🟢 **Live on Steam** | **v1.2.2** | Workshop item `3798667277`. Real Husbandry XP via the vanilla milking + auto-pour, multi-bucket, radial custom icon. |
-| 🧪 **In test (not on Steam)** | **v1.2.8** | staging ready in `%USERPROFILE%\Zomboid\Workshop\MilkIntoBarrel`, waiting for a manual Workshop upload. |
+| 🟢 **Live on Steam** | **v1.2.8** | Workshop item `3798667277`. Uploaded 2026-09-10. No-bucket milking now plays the milking animation + its duration is calibrated; version shown in the sandbox header; English source. |
+| 🧪 **In test (not on Steam)** | — (none) | `main` == v1.2.8, which is live. |
+
+Steam upload history: **1.1.0** (first) → **1.2.2** (second) → **1.2.8** (current).
 
 > Update the **Live on Steam** row **only when the mod is actually uploaded** to the Workshop.
 
