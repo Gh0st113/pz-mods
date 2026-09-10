@@ -26,3 +26,9 @@ Rappels B42 :
 ## Publication Workshop
 
 Chaque mod a un dossier `workshop/` (poster, preview, texte). Voir `MilkIntoBarrel/workshop/README.md`.
+
+## Licence
+
+Code sous licence [MIT](LICENSE) © Alpha13. Ce sont des **addons indépendants** : ils
+dépendent de leurs mods requis (ex. Useful Barrels) au moment de l'exécution mais n'en
+redistribuent pas le code.
