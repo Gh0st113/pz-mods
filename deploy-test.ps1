@@ -51,6 +51,21 @@ Get-ChildItem -Path $target -Recurse -Filter mod.info | ForEach-Object {
     Set-Content -Path $_.FullName -Value $out -Encoding UTF8
 }
 
+# Marque la VERSION dans les libelles bac a sable du build TEST (garanti visible a l'ecran de
+# config : titre de page + libelle de l'option de duree). Source publiee inchangee ; source
+# unique de la version = $tag/$version calcules depuis modversion ci-dessus. JSON sans BOM.
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+Get-ChildItem -Path $target -Recurse -Filter Sandbox.json | ForEach-Object {
+    $sb = Get-Content $_.FullName | ForEach-Object {
+        if ($_ -match '"Sandbox_MilkIntoBarrelDurationMultiplier"\s*:') {
+            $_ -replace '("Sandbox_MilkIntoBarrelDurationMultiplier"\s*:\s*")([^"]*)(")', ('$1$2 ' + $tag + '$3')
+        } elseif ($_ -match '"Sandbox_MilkIntoBarrel"\s*:') {
+            $_ -replace '("Sandbox_MilkIntoBarrel"\s*:\s*")([^"]*)(")', ('$1$2 ' + $tag + '$3')
+        } else { $_ }
+    }
+    [System.IO.File]::WriteAllLines($_.FullName, [string[]]$sb, $utf8NoBom)
+}
+
 Write-Host "Deploye (TEST) : $Mod  ->  $target"
 Write-Host "  id       = $testId   (ne peut PAS etre masque par le Workshop)"
 Write-Host "  visible  = '$tag ...' dans la liste des mods"
