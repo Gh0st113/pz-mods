@@ -3,8 +3,9 @@
 -- Sous-classe de la traite vanilla (ISMilkAnimal) : on herite de son ANIMATION et de sa
 -- mecanique de timing (timePerLiter). On n'appelle PAS animal:milkAnimal (donc pas d'XP) ;
 -- on surcharge :milk() pour transvaser ~1 L par tick de l'animal vers le baril.
--- NB : la duree ressentie ne colle PAS a la traite vanilla (a calibrer). Le multiplicateur
--- sandbox agit sur timePerLiter ; defaut 3.0 en attendant une vraie calibration.
+-- Mode "brut" assume : pas d'XP, pas de mecanique de stress/fuite (contrairement au vanilla).
+-- La base (BASE_TIME_PER_LITER=40) est EXACTEMENT le timePerLiter du vanilla (ISMilkAnimal:new),
+-- donc DurationMultiplier=1.0 (defaut) = vitesse de traite normale du jeu. >1 = plus lent, <1 = plus rapide.
 
 require "TimedActions/Animals/ISMilkAnimal"
 
@@ -13,8 +14,8 @@ local MB_Utils = require "MB_Utils"
 
 MB_MilkIntoBarrelAction = ISMilkAnimal:derive("MB_MilkIntoBarrelAction")
 
--- Rythme de base = ISMilkAnimal.timePerLiter (base vanilla), pilote par le multiplicateur
--- sandbox. La duree ressentie diverge du vanilla -> calibration a affiner ulterieurement.
+-- Rythme de base = ISMilkAnimal.timePerLiter du vanilla (40, cf. ISMilkAnimal:new). A mult=1.0
+-- la traite sans seau tourne donc a la vitesse de base du jeu ; le sandbox n'est qu'un facteur.
 local BASE_TIME_PER_LITER = 40
 
 local function durationMult()
@@ -67,6 +68,6 @@ function MB_MilkIntoBarrelAction:new(character, animal, right, barrelObj)
     o.barrelObj = barrelObj
     o.barrel = UB_Utils.GetValidBarrelFromWorldObjects({ barrelObj })
     o.milkFluid = MB_Utils.resolveMilkFluid(animal)
-    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- base x multiplicateur sandbox (defaut 3.0)
+    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- base vanilla (40) x multiplicateur sandbox (defaut 1.0 = vitesse vanilla)
     return o
 end
