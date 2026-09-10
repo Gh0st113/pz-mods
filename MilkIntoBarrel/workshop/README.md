@@ -1,21 +1,22 @@
-# Dossier d'upload Workshop — MilkIntoBarrel
+# Steam Workshop upload folder — MilkIntoBarrel
 
-À préparer avant publication sur le Steam Workshop (via l'outil intégré de PZ : menu principal → Workshop → Create/Edit) :
+These files are used to publish/update the mod on the Steam Workshop (via PZ's built-in tool:
+main menu → Workshop → Create and Edit Item):
 
-- **poster.png** — l'affiche du mod (recommandé 256×256, PNG).
-- **preview.png** — l'aperçu Workshop (recommandé 256×256 ou plus, PNG).
-- **workshop.txt** — métadonnées Workshop (titre, description, tags, id une fois publié).
+- **preview.png** — the Workshop preview image (512×512).
+- **poster.png** / **icon.png** — the in-game images (also shipped under `../42/`).
+- **source.png** — the full-resolution source of the preview.
+- **workshop.txt** — Workshop metadata (title, tags, id once published) and the description text
+  shown on the Steam page.
 
-## Rappels de packaging B42
+## B42 packaging notes
 
-L'outil Workshop de PZ attend un dossier `Contents/mods/<ModId>/…`. Notre source (`../42/…`)
-correspond au contenu du mod ; l'outil s'occupe de l'emballage `Contents/`.
+PZ's Workshop tool expects a `Contents/mods/<ModId>/…` folder. Our source (`../42/…`) is the mod
+content; the tool builds the `Contents/` wrapper.
 
-Le `mod.info` référence déjà :
+`mod.info` already declares:
 - `id=MilkIntoBarrel`
-- `require=UsefulBarrelsMP` (dépendance Useful Barrels)
+- `require=UsefulBarrelsMP` (Useful Barrels dependency)
 - `versionMin=42.13`
 
-Pensez à ajouter Useful Barrels comme **dépendance requise** sur la page Workshop.
-
-*(Placeholders : ajoutez ici poster.png / preview.png / workshop.txt quand prêts.)*
+Remember to add **Useful Barrels** as a required item on the Workshop page.

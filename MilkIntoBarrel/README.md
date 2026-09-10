@@ -1,39 +1,55 @@
-# Traire dans le baril (MilkIntoBarrel)
+# Milk Into Barrels
 
-**Publié sur le Steam Workshop :** https://steamcommunity.com/sharedfiles/filedetails/?id=3798667277 (id `3798667277`)
+**Published on the Steam Workshop:** https://steamcommunity.com/sharedfiles/filedetails/?id=3798667277 (id `3798667277`)
 
-Addon de **[Useful Barrels](https://steamcommunity.com/sharedfiles/filedetails/?id=3436537035)** pour Project Zomboid **Build 42**.
+> 🌍 **Translators welcome** — the mod is translation-ready (all text is externalized to JSON, EN + FR provided). See [TRANSLATIONS.md](TRANSLATIONS.md): 3 steps, ~7 short strings.
 
-Permet de **traire un animal directement dans un baril Useful Barrels ouvert** posé à proximité — le pendant, pour les animaux, du siphonnage baril↔véhicule d'Useful Barrels.
+An add-on for **[Useful Barrels](https://steamcommunity.com/sharedfiles/filedetails/?id=3436537035)** for Project Zomboid **Build 42**.
 
-> 🌍 **Traducteurs bienvenus** — le mod est prêt pour la traduction (tout le texte est externalisé en JSON, EN + FR fournis). Voir [TRANSLATIONS.md](TRANSLATIONS.md) : 3 étapes, ~7 courtes chaînes.
+Milk a milkable animal **straight into a nearby open Useful Barrels barrel** — the animal counterpart of Useful Barrels' barrel↔vehicle siphoning.
 
-## Utilisation en jeu
+## In-game usage
 
-Trois façons de déclencher l'action (l'option n'apparaît que si les conditions sont réunies) :
+Three ways to trigger it (the option only shows when the conditions are met):
 
-- **Clic droit sur l'animal** → « Traire [animal] dans le baril »
-- **Clic droit sur le baril** → « Traire [animal] dans le baril » (sous-menu si plusieurs animaux)
-- **Radial (touche V)** près de l'animal → même tranche
+- **Right-click the animal** → "Milk <animal> into the barrel"
+- **Right-click the barrel** → "Milk <animal> into the barrel" (submenu if several animals)
+- **Radial menu (V key)** near the animal → same slice
 
-### Conditions
-- Un **animal traiable** avec du lait (vache, brebis… et tout animal moddé traiable — le mod n'est pas limité à une espèce).
-- Un **baril Useful Barrels ouvert** (couvercle découpé/dévissé) à **≤ 3 tuiles**, **vide ou contenant déjà le même lait** (pas de mélange de fluides).
+### How it works
+With a **bucket** on you, milking goes through the vanilla milking action (so you get the exact
+Husbandry XP, the correct amounts and the stress mechanic) into the bucket, and the milk is then
+**poured automatically into the barrel**. If the animal is very productive it fills several buckets
+and empties them all into the barrel. A bucket is required by default.
 
-Le lait transféré correspond au type de l'animal (`CowMilk`, `SheepMilk`, …). La vitesse est lente (action à minuterie). Donne un peu d'XP Élevage.
+A server sandbox option **"Allow milking without a bucket"** (off by default) lets you milk straight
+into the barrel with no bucket — convenient, but it grants **no XP**.
 
-## Dépendance
-- **Useful Barrels** (`UsefulBarrelsMP`) — requis (déclaré dans `mod.info`).
+### Requirements
+- An **open Useful Barrels barrel** (empty, or already holding the same milk) within ~3 tiles.
+- A **milkable animal** with milk (cows, sheep… and any modded milkable animal — not limited to one species).
+- A **bucket** (unless the no-bucket sandbox option is enabled).
 
-## Multijoueur
-Transfert calculé côté **serveur** (autoritaire) ; la quantité de lait est synchronisée vers les clients. Testé en solo ; validation MP recommandée sur serveur dédié.
+The milk type matches the animal (`CowMilk`, `SheepMilk`, …).
+
+## Dependency
+- **Useful Barrels** (`UsefulBarrelsMP`) — required (declared in `mod.info`).
+
+## Multiplayer
+The transfer is computed **server-side** (authoritative). Tested in single-player; MP validation
+recommended on a dedicated server.
 
 ## Structure
 ```
 42/mod.info
-42/media/lua/shared/MB_Utils.lua                       -- helpers (animaux/barils proches, fluide lait)
-42/media/lua/shared/MB_MilkSync.lua                    -- synchro serveur -> clients du lait
-42/media/lua/shared/TimedActions/MB_MilkIntoBarrelAction.lua  -- l'action de traite -> baril
-42/media/lua/client/MB_MilkContextMenu.lua             -- clic droit animal + baril, radial V
-42/media/lua/shared/Translate/{EN,FR}/ContextMenu.*    -- traductions
+42/media/lua/shared/MB_Utils.lua                                  -- helpers (nearby animals/barrels, milk fluid)
+42/media/lua/shared/MB_MilkSync.lua                               -- server -> client milk sync
+42/media/lua/shared/TimedActions/MB_MilkAnimalToBarrelAction.lua  -- vanilla milking (XP) + auto-pour into the barrel
+42/media/lua/shared/TimedActions/MB_MilkIntoBarrelAction.lua      -- direct no-bucket transfer (no XP)
+42/media/lua/client/MB_MilkContextMenu.lua                        -- right-click animal + barrel, radial V
+42/media/lua/shared/Translate/{EN,FR}/*.json                      -- translations
+42/media/ui/MilkIntoBarrel_Milk.png                               -- radial icon
 ```
+
+## License
+MIT © Alpha13. See [../LICENSE](../LICENSE).
