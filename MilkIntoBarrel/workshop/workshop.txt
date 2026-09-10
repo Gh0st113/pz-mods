@@ -21,8 +21,8 @@ description=[b]You need a bucket[/b] (any container that can hold the milk) and 
 description=
 description=[h1]Sandbox options[/h1]
 description=[list]
-description=[*] Allow milking without a bucket (off by default): milk straight into the barrel, now with the proper milking animation - convenient, but grants no Husbandry XP.
-description=[*] Milking duration multiplier for the no-bucket mode (default is tuned to the normal milking pace; higher = slower).
+description=[*] [b]Allow milking without a bucket (hybrid)[/b] - off by default. When ON you can milk with or without a bucket: WITH a bucket you get the normal Husbandry XP; WITHOUT a bucket the milk still goes straight into the barrel (with the milking animation) but grants no XP.
+description=[*] [b]Milking duration multiplier (no-bucket only)[/b] - speed of the no-bucket milking (default tuned to the normal milking pace; higher = slower; no effect when you use a bucket).
 description=[/list]
 description=
 description=[h1]Dependency & thanks[/h1]
