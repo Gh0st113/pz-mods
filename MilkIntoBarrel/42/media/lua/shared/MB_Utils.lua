@@ -1,14 +1,14 @@
--- MB_Utils : helpers partages pour le mod "Traire dans le baril".
--- S'appuie sur l'API de Useful Barrels (UB_Utils / UB_FluidBarrel).
+-- MB_Utils: shared helpers for the "Milk Into Barrels" mod.
+-- Builds on Useful Barrels' API (UB_Utils / UB_FluidBarrel).
 
 local UB_Utils = require "UB_Utils"
 
 local MB_Utils = {}
 
-MB_Utils.SCAN_DISTANCE = 3   -- meme portee que UB pour le ravitaillement vehicule (VEHICLE_SCAN_DISTANCE)
-MB_Utils.MILK_MIN = 0.1      -- seuil vanilla (voir ISAnimalContextMenu / ISMilkAnimal)
+MB_Utils.SCAN_DISTANCE = 3   -- same range as UB's vehicle refuel (VEHICLE_SCAN_DISTANCE)
+MB_Utils.MILK_MIN = 0.1      -- vanilla threshold (see ISAnimalContextMenu / ISMilkAnimal)
 
--- Retourne le Fluid du lait de l'animal (type specifique a la race, sinon AnimalMilk).
+-- Returns the animal's milk Fluid (breed-specific type, else AnimalMilk).
 function MB_Utils.resolveMilkFluid(animal)
     local ok, breed = pcall(function() return animal:getData():getBreed() end)
     if ok and breed then
@@ -21,7 +21,7 @@ function MB_Utils.resolveMilkFluid(animal)
     return Fluid.AnimalMilk
 end
 
--- L'animal peut-il etre trait maintenant ?
+-- Can the animal be milked right now?
 function MB_Utils.isMilkable(animal)
     if not animal then return false end
     local ok = pcall(function() return animal:canBeMilked() end)
@@ -29,7 +29,7 @@ function MB_Utils.isMilkable(animal)
     return animal:getData():getMilkQuantity() > MB_Utils.MILK_MIN
 end
 
--- Extrait un baril UB *ouvert* (avec conteneur de fluide) d'une liste d'objets monde.
+-- Extracts an *open* UB barrel (with a fluid container) from a list of world objects.
 function MB_Utils.getMilkBarrel(worldObjects)
     local barrel = UB_Utils.GetValidBarrelFromWorldObjects(worldObjects)
     if barrel and barrel.hasFluidContainer and barrel:hasFluidContainer() then
@@ -38,14 +38,14 @@ function MB_Utils.getMilkBarrel(worldObjects)
     return nil
 end
 
--- Le baril peut-il accepter ce lait ? (place libre + fluide compatible : vide, ou deja ce lait)
+-- Can the barrel accept this milk? (free space + compatible fluid: empty, or already this milk)
 function MB_Utils.barrelAcceptsMilk(barrel, milkFluid)
     if not barrel then return false end
     if barrel:getFreeCapacity() <= 0 then return false end
     return barrel:canAddFluid(milkFluid)
 end
 
--- Animaux traiables autour d'une case.
+-- Milkable animals around a square.
 function MB_Utils.getMilkableAnimalsNear(square, distance)
     local animals = {}
     if not square then return animals end
@@ -64,7 +64,7 @@ function MB_Utils.getMilkableAnimalsNear(square, distance)
     return animals
 end
 
--- Barils UB ouverts autour d'une case (un par case suffit).
+-- Open UB barrels around a square (one per square is enough).
 function MB_Utils.getMilkBarrelsNear(square, distance)
     local barrels = {}
     if not square then return barrels end
@@ -79,12 +79,12 @@ function MB_Utils.getMilkBarrelsNear(square, distance)
     return barrels
 end
 
--- Sandbox : autoriser la traite sans seau (off par defaut).
+-- Sandbox: allow milking without a bucket (off by default).
 function MB_Utils.allowNoBucket()
     return SandboxVars.MilkIntoBarrel ~= nil and SandboxVars.MilkIntoBarrel.AllowNoBucket == true
 end
 
--- Retourne un seau (contenant capable d'accueillir ce lait) porte par le joueur, sinon nil.
+-- Returns a bucket (a container able to hold this milk) carried by the player, else nil.
 function MB_Utils.getMilkBucket(playerObj, animal)
     local ok, milkType = pcall(function() return animal:getData():getBreed():getMilkType() end)
     if not ok or not milkType then return nil end
@@ -93,8 +93,8 @@ function MB_Utils.getMilkBucket(playerObj, animal)
     return nil
 end
 
--- Mode de traite pour cet animal : "bucket" (via seau -> vraie XP), "nobucket" (sans seau,
--- sans XP, si autorise par le sandbox), ou nil (pas possible).
+-- Milking mode for this animal: "bucket" (via a bucket -> real XP), "nobucket" (no bucket,
+-- no XP, if allowed by the sandbox), or nil (not possible).
 function MB_Utils.milkMode(playerObj, animal)
     if not MB_Utils.isMilkable(animal) then return nil end
     if MB_Utils.getMilkBucket(playerObj, animal) then return "bucket" end

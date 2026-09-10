@@ -1,6 +1,6 @@
 {
 
-  "Sandbox_MilkIntoBarrel": "Traire dans le baril — v1.2.7",
+  "Sandbox_MilkIntoBarrel": "Traire dans le baril - v1.2.8",
   "Sandbox_MilkIntoBarrelDurationMultiplier": "Multiplicateur de duree de traite (sans seau)",
   "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "Vitesse de la traite sans seau (~vanilla). Plus haut = plus lent. Sans effet avec un seau.",
   "Sandbox_MilkIntoBarrelAllowNoBucket": "Autoriser la traite sans seau (hybride)",

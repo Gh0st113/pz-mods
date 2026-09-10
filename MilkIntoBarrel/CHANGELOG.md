@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.8 — 2026-09-10
+- Repo cleanup, no gameplay change: **all source is now English** (mod name/description in `mod.info`, Lua and PowerShell comments) — the French text lives only in the `Translate/FR` files. The sandbox section header uses a plain `-` instead of `—` (some fonts render the em dash as "?").
+
 ## 1.2.7 — 2026-09-10
 - Shorter sandbox tooltip: "No-bucket milking speed (~vanilla). Higher = slower. No effect with a bucket." (Uses "~" rather than "≈", which PZ's font renders as "?".)
 

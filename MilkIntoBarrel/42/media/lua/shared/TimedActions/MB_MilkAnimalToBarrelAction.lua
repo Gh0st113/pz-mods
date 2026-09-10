@@ -1,21 +1,21 @@
--- MB_MilkAnimalToBarrelAction : sous-classe de la traite vanilla (ISMilkAnimal).
--- On trait dans le seau exactement comme le jeu (VRAIE XP moteur + quantites + stress),
--- puis on verse le seau dans le baril DEPUIS L'ACTION (a la fin de la traite).
--- On ne peut PAS enchainer une action apres ISMilkAnimal : elle finit en forceStop/
--- forceComplete, ce qui annule la suite de la file. D'ou le versement interne ici.
+-- MB_MilkAnimalToBarrelAction: subclass of the vanilla milking action (ISMilkAnimal).
+-- We milk into the bucket exactly like the game (REAL engine XP + amounts + stress),
+-- then pour the bucket into the barrel FROM WITHIN THE ACTION (at the end of the milking).
+-- We can NOT queue an action after ISMilkAnimal: it ends with a forceStop/forceComplete,
+-- which cancels whatever follows in the queue. Hence the pour is done inline here.
 
 require "TimedActions/Animals/ISMilkAnimal"
 
 MB_MilkAnimalToBarrelAction = ISMilkAnimal:derive("MB_MilkAnimalToBarrelAction")
 
--- Transfert -> baril de TOUS les seaux du joueur contenant ce lait (multi-seaux),
--- jusqu'a ce que le baril soit plein. Autoritaire (serveur ou solo). Idempotent (flag poured).
+-- Pour into the barrel ALL of the player's containers holding this milk (multi-bucket),
+-- until the barrel is full. Authoritative (server or solo). Idempotent (poured flag).
 function MB_MilkAnimalToBarrelAction:doPour(reason)
     if self.poured then return end
     if isClient() then return end
     if not self.barrelObj then return end
 
-    -- fluide "lait" de reference (celui du seau, sinon celui de la race)
+    -- reference "milk" fluid (the bucket's, else the breed's)
     local milkFluid = nil
     if self.bucket and self.bucket:getFluidContainer() then
         milkFluid = self.bucket:getFluidContainer():getPrimaryFluid()
@@ -26,7 +26,7 @@ function MB_MilkAnimalToBarrelAction:doPour(reason)
     end
     if not milkFluid then return end
 
-    -- tous les contenants du joueur qui tiennent ce lait
+    -- all of the player's containers that hold this milk
     local containers = self.character:getInventory():getAllEvalRecurse(function(it)
         local c = it:getFluidContainer()
         return c ~= nil and c:getAmount() > 0 and c:contains(milkFluid)
@@ -72,7 +72,7 @@ function MB_MilkAnimalToBarrelAction:stop()
 end
 
 function MB_MilkAnimalToBarrelAction:new(character, animal, bucket, right, barrelObj)
-    local o = ISMilkAnimal.new(self, character, animal, bucket, right, true) -- all=true : remplit plusieurs seaux
+    local o = ISMilkAnimal.new(self, character, animal, bucket, right, true) -- all=true: fill several buckets
     o.barrelObj = barrelObj
     o.poured = false
     return o

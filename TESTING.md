@@ -20,7 +20,7 @@ testing an old version without noticing. To remove all doubt, we test under a **
 
 This copies the mod to `Zomboid\mods\MilkIntoBarrelTEST` and rewrites its `mod.info`:
 - `id` → `MilkIntoBarrelTEST` (can never collide with the published Workshop mod)
-- `name` → `[TEST v1.2.3] Traire dans le baril …` (instantly recognizable in the mod list)
+- `name` → `[TEST v1.2.8] Milk Into Barrels …` (instantly recognizable in the mod list)
 
 Then in game:
 1. **Relaunch PZ** (full quit, not just back-to-menu).
@@ -42,8 +42,8 @@ Remove the test build when done:
 ## Confirming the right version is loaded
 
 - The mod list shows `[TEST v<version>] …`.
-- On a **new** save, the sandbox option **Milk Into Barrels** shows the expected defaults
-  (e.g. *Allow milking without a bucket (hybrid)*, duration multiplier default `1.0`).
+- On a **new** save, the sandbox section header shows the version (e.g. **Milk Into Barrels - v1.2.8**)
+  and the expected defaults (e.g. *Allow milking without a bucket (hybrid)*, duration multiplier default `10`).
 
 ## Shipping a normal (non-test) local copy
 

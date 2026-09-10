@@ -1,29 +1,29 @@
--- MB_MilkContextMenu : les points d'entree en jeu.
---  1) Clic droit sur un ANIMAL traiable  -> "Traire <animal> dans le baril"
---  2) Clic droit sur un BARIL UB ouvert   -> "Traire <animal> dans le baril" (sous-menu si plusieurs)
---  3) Radial (V) sur l'animal             -> meme tranche (fonctionne aussi sur animal sauvage)
+-- MB_MilkContextMenu: the in-game entry points.
+--  1) Right-click a milkable ANIMAL  -> "Milk <animal> into the barrel"
+--  2) Right-click an open UB BARREL   -> "Milk <animal> into the barrel" (submenu if several)
+--  3) Radial (V) on the animal        -> same slice (also works on a wild animal)
 --
--- Deux modes selon la possession d'un seau :
---   * "bucket"   : traite vanilla dans le seau (VRAIE XP moteur) puis versement auto seau -> baril.
---   * "nobucket" : transfert direct animal -> baril, SANS XP (autorise via sandbox AllowNoBucket).
+-- Two modes depending on whether a bucket is carried:
+--   * "bucket"   : vanilla milking into the bucket (REAL engine XP) then auto-pour bucket -> barrel.
+--   * "nobucket" : direct animal -> barrel transfer, WITHOUT XP (enabled via sandbox AllowNoBucket).
 
 require "TimedActions/MB_MilkIntoBarrelAction"
 require "TimedActions/MB_MilkAnimalToBarrelAction"
 require "ISUI/Animal/ISAnimalContextMenu"
--- ISWalkToTimedActionF est un global fourni par le jeu (pas de fichier a require).
+-- ISWalkToTimedActionF is a global provided by the game (no file to require).
 
 local MB_Utils = require "MB_Utils"
 
 local MilkBarrel = {}
 
--- Lanceur commun. Selon le mode, enchaine soit la traite vanilla + versement, soit le transfert direct.
+-- Common launcher. Depending on the mode, queues either vanilla milking + pour, or the direct transfer.
 function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
     if not animal or not barrelObj then return end
 
     animal:stopAllMovementNow()
     animal:getBehavior():setBlockMovement(true)
 
-    -- position de traite (gauche/droite), comme la traite vanilla
+    -- milking position (left/right), like vanilla milking
     local vec, right = nil, true
     local okR, vecRight = pcall(function() return animal:getAttachmentWorldPos("rightmilk") end)
     local okL, vecLeft  = pcall(function() return animal:getAttachmentWorldPos("leftmilk") end)
@@ -42,10 +42,10 @@ function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
 
     local bucket = MB_Utils.getMilkBucket(playerObj, animal)
     if bucket then
-        -- traite vanilla dans le seau (vraie XP) + versement interne seau -> baril a la fin
+        -- vanilla milking into the bucket (real XP) + internal pour bucket -> barrel at the end
         ISTimedActionQueue.add(MB_MilkAnimalToBarrelAction:new(playerObj, animal, bucket, right, barrelObj))
     else
-        -- pas de seau : traite vanilla (rythme + anim) transvasee directement dans le baril, sans XP
+        -- no bucket: vanilla milking (rate + anim) transferred straight into the barrel, without XP
         ISTimedActionQueue.add(MB_MilkIntoBarrelAction:new(playerObj, animal, right, barrelObj))
     end
 end
@@ -54,7 +54,7 @@ local function milkOptionText(animal)
     return getText("ContextMenu_MilkBarrel_MilkAnimal", animal:getFullName())
 end
 
--- Ajoute une info-bulle "sans XP" quand on est en mode nobucket.
+-- Adds a "no XP" tooltip when in nobucket mode.
 local function tagNoXp(option, mode)
     if mode == "nobucket" and option then
         local tt = ISWorldObjectContextMenu.addToolTip()
@@ -63,7 +63,7 @@ local function tagNoXp(option, mode)
     end
 end
 
--- Premier baril ouvert compatible autour d'une case, sinon nil.
+-- First open compatible barrel around a square, else nil.
 local function firstAcceptingBarrel(sq, milkFluid)
     for _, barrel in ipairs(MB_Utils.getMilkBarrelsNear(sq, MB_Utils.SCAN_DISTANCE)) do
         if MB_Utils.barrelAcceptsMilk(barrel, milkFluid) then
@@ -73,7 +73,7 @@ local function firstAcceptingBarrel(sq, milkFluid)
     return nil
 end
 
--- ============================ COTE ANIMAL (clic droit) ============================
+-- ============================ ANIMAL SIDE (right-click) ============================
 function MilkBarrel.onClickedAnimalForContext(player, context, animals, test)
     if test then return end
     local playerObj = getSpecificPlayer(player)
@@ -95,7 +95,7 @@ function MilkBarrel.onClickedAnimalForContext(player, context, animals, test)
     end
 end
 
--- ============================ COTE BARIL (clic droit) ============================
+-- ============================ BARREL SIDE (right-click) ============================
 function MilkBarrel.onFillWorldObjectContextMenu(player, context, worldobjects, test)
     if test then return end
     local playerObj = getSpecificPlayer(player)
@@ -132,9 +132,9 @@ function MilkBarrel.onFillWorldObjectContextMenu(player, context, worldobjects, 
     end
 end
 
--- ============================ RADIAL ANIMAL (touche V) ============================
--- Enveloppe AnimalContextMenu.showRadialMenu. Le radial vanilla ABANDONNE si l'animal
--- est sauvage (isWild) ; on gere ce cas en construisant nous-memes la roue.
+-- ============================ ANIMAL RADIAL (V key) ============================
+-- Wraps AnimalContextMenu.showRadialMenu. The vanilla radial GIVES UP if the animal is
+-- wild (isWild); we handle that case by building the wheel ourselves.
 if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._radialPatched then
     MilkBarrel._radialPatched = true
     local origShowRadial = AnimalContextMenu.showRadialMenu
@@ -147,7 +147,7 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
         origShowRadial(playerObj)
 
         if not playerObj or not menu then return end
-        if wasVisible then return end   -- c'etait un toggle-off : ne rien faire
+        if wasVisible then return end   -- it was a toggle-off: do nothing
 
         local animal = AnimalContextMenu.getAnimalToInteractWith(playerObj)
         if not animal or not MB_Utils.milkMode(playerObj, animal) then return end
@@ -158,9 +158,9 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
 
         local nowVisible = menu:isReallyVisible()
         if not nowVisible then
-            -- Filet de securite : vanilla a abandonne (animal sauvage). On ne construit notre
-            -- propre roue QUE si le joueur est a portee de traite (< 3 tuiles, comme l'action) ;
-            -- sinon on ne fait rien (evite toute roue "Milk" isolee hors de portee).
+            -- Safety net: vanilla gave up (wild animal). We only build our own wheel if the
+            -- player is within milking range (< 3 tiles, like the action); otherwise do
+            -- nothing (avoids any stray "Milk" wheel out of reach).
             local psq = playerObj:getSquare()
             if not animalSq or not psq or psq:DistTo(animalSq) >= 3 then return end
             menu:clear()
@@ -168,7 +168,7 @@ if AnimalContextMenu and AnimalContextMenu.showRadialMenu and not MilkBarrel._ra
 
         menu:addSlice(
             milkOptionText(animal),
-            getTexture("media/ui/MilkIntoBarrel_Milk.png"),  -- icone propre au mod (baril + goutte), pas le seau vanilla
+            getTexture("media/ui/MilkIntoBarrel_Milk.png"),  -- mod-specific icon (barrel + drop), not the vanilla bucket
             MilkBarrel.onMilkIntoBarrel, playerObj, animal, barrel.isoObject)
 
         menu:setX(getPlayerScreenLeft(pi) + getPlayerScreenWidth(pi) / 2 - menu:getWidth() / 2)

@@ -34,5 +34,15 @@ description=Tested in single-player. Multiplayer testing in progress (the transf
 description=
 description=[h1]Compatibility[/h1]
 description=Build 42. This is an add-on: it doesn't replace anything in Useful Barrels.
+description=
+description=[h1]Changelog[/h1]
+description=[b]1.2.8[/b] - Cleanup only, no gameplay change: all source is now in English (the mod still ships EN + FR in-game text).
+description=[b]1.2.7[/b] - Shorter, clearer sandbox tooltip for the duration multiplier.
+description=[b]1.2.6[/b] - The mod version is now shown in the sandbox section header (it used to be an editable field you could change by mistake).
+description=[b]1.2.5 / 1.2.4[/b] - No-bucket milking duration calibrated to match the normal bucket-milking pace (default x10; sandbox range 5-20, higher = slower).
+description=[b]1.2.3[/b] - Radial menu (V): the milk slice only appears when you are actually within range of the animal (no more stray slice).
+description=[b]1.2.2[/b] - Radial menu (V): custom icon (a barrel with a milk drop) so it no longer looks identical to the vanilla "Milk" option.
+description=[b]1.2.1[/b] - Milking animation fix: the milk now actually pours into the barrel (the previous build queued a separate pour that the milking animation's force-stop cancelled). A very productive animal now fills several buckets and empties them all into the barrel.
+description=[b]1.2.0[/b] - Milking now runs through the vanilla milking animation into a bucket for real Husbandry XP, then auto-pours into the barrel. Optional no-bucket mode added (direct transfer, no XP).
 tags=Build 42;Food;Multiplayer
 visibility=public

@@ -1,12 +1,12 @@
--- MB_MilkIntoBarrelAction : traite SANS seau -> directement dans le baril, SANS XP.
+-- MB_MilkIntoBarrelAction: milk WITHOUT a bucket -> straight into the barrel, WITHOUT XP.
 --
--- Sous-classe de la traite vanilla (ISMilkAnimal) : on herite de son ANIMATION et de sa
--- mecanique de timing (timePerLiter). On n'appelle PAS animal:milkAnimal (donc pas d'XP) ;
--- on surcharge :milk() pour transvaser ~1 L par tick de l'animal vers le baril.
--- Mode "brut" assume : pas d'XP, pas de mecanique de stress/fuite (contrairement au vanilla).
--- La base (BASE_TIME_PER_LITER=40) est EXACTEMENT le timePerLiter du vanilla (ISMilkAnimal:new),
--- donc DurationMultiplier=1.0 = vitesse de traite normale du jeu. Defaut 10.0 (~rythme de la
--- traite au seau, approximatif ; plage sandbox 5..20). Reglable par l'admin/serveur.
+-- Subclass of the vanilla milking action (ISMilkAnimal): we inherit its ANIMATION and its
+-- timing mechanic (timePerLiter). We do NOT call animal:milkAnimal (so no XP); we override
+-- :milk() to transfer ~1 L per tick from the animal into the barrel.
+-- Deliberate "raw" mode: no XP, no stress/flee mechanic (unlike vanilla).
+-- The base (BASE_TIME_PER_LITER=40) is EXACTLY vanilla's timePerLiter (ISMilkAnimal:new),
+-- so DurationMultiplier=1.0 = the game's normal milking speed. Default 10.0 (~bucket-milking
+-- rate, approximate; sandbox range 5..20). Admin/server-configurable.
 
 require "TimedActions/Animals/ISMilkAnimal"
 
@@ -15,8 +15,8 @@ local MB_Utils = require "MB_Utils"
 
 MB_MilkIntoBarrelAction = ISMilkAnimal:derive("MB_MilkIntoBarrelAction")
 
--- Rythme de base = ISMilkAnimal.timePerLiter du vanilla (40, cf. ISMilkAnimal:new). A mult=1.0
--- la traite sans seau tourne donc a la vitesse de base du jeu ; le sandbox n'est qu'un facteur.
+-- Base rate = vanilla's ISMilkAnimal.timePerLiter (40, see ISMilkAnimal:new). At mult=1.0 the
+-- no-bucket milking runs at the game's base speed; the sandbox value is only a factor.
 local BASE_TIME_PER_LITER = 40
 
 local function durationMult()
@@ -34,8 +34,8 @@ function MB_MilkIntoBarrelAction:isValid()
     return asq ~= nil and self.character:getSquare():DistTo(asq) < 3
 end
 
--- Surcharge du coeur de la traite : au lieu de milkAnimal(->seau + XP), on transvase
--- directement dans le baril, sans XP. Appelee au meme rythme que vanilla (par timePerLiter).
+-- Override the core of the milking: instead of milkAnimal(->bucket + XP), transfer straight
+-- into the barrel, without XP. Called at the same rate as vanilla (driven by timePerLiter).
 function MB_MilkIntoBarrelAction:milk()
     if isClient() then return end
 
@@ -65,10 +65,10 @@ function MB_MilkIntoBarrelAction:milk()
 end
 
 function MB_MilkIntoBarrelAction:new(character, animal, right, barrelObj)
-    local o = ISMilkAnimal.new(self, character, animal, nil, right, false) -- bucket=nil : on ne remplit pas de seau
+    local o = ISMilkAnimal.new(self, character, animal, nil, right, false) -- bucket=nil: we do not fill a bucket
     o.barrelObj = barrelObj
     o.barrel = UB_Utils.GetValidBarrelFromWorldObjects({ barrelObj })
     o.milkFluid = MB_Utils.resolveMilkFluid(animal)
-    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- base vanilla (40) x multiplicateur sandbox (defaut 10.0 ~ rythme seau ; 1.0 = vitesse vanilla brute)
+    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- vanilla base (40) x sandbox multiplier (default 10.0 ~ bucket rate; 1.0 = raw vanilla speed)
     return o
 end
