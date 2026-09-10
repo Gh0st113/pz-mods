@@ -45,8 +45,8 @@ function MilkBarrel.onMilkIntoBarrel(playerObj, animal, barrelObj)
         -- traite vanilla dans le seau (vraie XP) + versement interne seau -> baril a la fin
         ISTimedActionQueue.add(MB_MilkAnimalToBarrelAction:new(playerObj, animal, bucket, right, barrelObj))
     else
-        -- pas de seau : transfert direct (sans XP), autorise par le sandbox
-        ISTimedActionQueue.add(MB_MilkIntoBarrelAction:new(playerObj, animal, barrelObj))
+        -- pas de seau : traite vanilla (rythme + anim) transvasee directement dans le baril, sans XP
+        ISTimedActionQueue.add(MB_MilkIntoBarrelAction:new(playerObj, animal, right, barrelObj))
     end
 end
 

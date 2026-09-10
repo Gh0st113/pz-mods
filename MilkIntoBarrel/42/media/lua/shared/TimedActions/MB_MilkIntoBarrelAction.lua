@@ -1,169 +1,72 @@
--- MB_MilkIntoBarrelAction : traire un animal directement dans un baril UB pose au sol.
--- Squelette MP-safe calque sur UB_SiphonFromVehicleAction (source externe -> baril),
--- ou "source" = quantite de lait de l'animal au lieu du reservoir d'un vehicule.
+-- MB_MilkIntoBarrelAction : traite SANS seau -> directement dans le baril, SANS XP.
+--
+-- Sous-classe de la traite vanilla (ISMilkAnimal) : on herite de son ANIMATION et de sa
+-- mecanique de timing (timePerLiter). On n'appelle PAS animal:milkAnimal (donc pas d'XP) ;
+-- on surcharge :milk() pour transvaser ~1 L par tick de l'animal vers le baril.
+-- NB : la duree ressentie ne colle PAS a la traite vanilla (a calibrer). Le multiplicateur
+-- sandbox agit sur timePerLiter ; defaut 3.0 en attendant une vraie calibration.
 
-require "TimedActions/ISBaseTimedAction"
+require "TimedActions/Animals/ISMilkAnimal"
 
 local UB_Utils = require "UB_Utils"
 local MB_Utils = require "MB_Utils"
 
-MB_MilkIntoBarrelAction = ISBaseTimedAction:derive("MB_MilkIntoBarrelAction")
+MB_MilkIntoBarrelAction = ISMilkAnimal:derive("MB_MilkIntoBarrelAction")
 
-local BASE_RATE = 30   -- ticks de temps par litre (base de reference)
+-- Rythme de base = ISMilkAnimal.timePerLiter (base vanilla), pilote par le multiplicateur
+-- sandbox. La duree ressentie diverge du vanilla -> calibration a affiner ulterieurement.
+local BASE_TIME_PER_LITER = 40
 
--- Debit effectif = base x multiplicateur sandbox (defaut 2.0 = deux fois plus lent).
-local function getRate()
-    local mult = 2.0
+local function durationMult()
     if SandboxVars.MilkIntoBarrel and SandboxVars.MilkIntoBarrel.DurationMultiplier then
-        mult = SandboxVars.MilkIntoBarrel.DurationMultiplier
+        return SandboxVars.MilkIntoBarrel.DurationMultiplier
     end
-    return BASE_RATE * mult
+    return 1.0
 end
 
 function MB_MilkIntoBarrelAction:isValid()
     if not self.barrel or not self.animal then return false end
     if not MB_Utils.isMilkable(self.animal) then return false end
     if self.barrel:getFreeCapacity() <= 0 then return false end
-    local animalSq = self.animal:getSquare() or self.animal:getCurrentSquare()
-    if not animalSq then return false end
-    return self.character:getSquare():DistTo(animalSq) < 3
+    local asq = self.animal:getSquare() or self.animal:getCurrentSquare()
+    return asq ~= nil and self.character:getSquare():DistTo(asq) < 3
 end
 
-function MB_MilkIntoBarrelAction:waitToStart()
-    self.character:faceThisObject(self.animal)
-    return self.character:shouldBeTurning()
-end
+-- Surcharge du coeur de la traite : au lieu de milkAnimal(->seau + XP), on transvase
+-- directement dans le baril, sans XP. Appelee au meme rythme que vanilla (par timePerLiter).
+function MB_MilkIntoBarrelAction:milk()
+    if isClient() then return end
 
-function MB_MilkIntoBarrelAction:update()
-    local progress
-    if isServer() then
-        progress = self.netAction:getProgress()
+    local data = self.animal:getData()
+    local free = self.barrel:getFreeCapacity()
+    if data:getMilkQuantity() < 0.1 or free <= 0 then
+        if isServer() then self.netAction:forceComplete() else self:forceStop() end
+        return
+    end
+
+    local amt = math.min(1.0, data:getMilkQuantity(), free)
+    if self.barrel:isEmpty() and self.barrel:canAddFluid(self.milkFluid) then
+        self.barrel:addFluid(self.milkFluid, amt)
     else
-        progress = self:getJobDelta()
+        self.barrel:adjustSpecificFluidAmount(self.milkFluid, self.barrel:getAmount() + amt)
     end
+    self.barrelObj:sync()
+    LuaEventManager.triggerEvent("OnWaterAmountChange", self.barrelObj, -1)
 
-    if not isServer() then
-        self.character:faceThisObject(self.animal)
-    end
-
-    -- Travail autoritaire : serveur (MP) ou machine unique (solo). Jamais cote client pur.
-    if not isClient() then
-        local transferred = self.amountToTransfer * progress
-        local newBarrelAmt = self.barrelStart + transferred
-        if newBarrelAmt ~= self.amountSent then
-            if self.barrel:isEmpty() and self.barrel:canAddFluid(self.milkFluid) then
-                self.barrel:addFluid(self.milkFluid, transferred)
-            else
-                self.barrel:adjustSpecificFluidAmount(self.milkFluid, newBarrelAmt)
-            end
-            self.barrelObj:sync()
-            LuaEventManager.triggerEvent("OnWaterAmountChange", self.barrelObj, -1)
-
-            local newMilk = self.milkStart - transferred
-            if newMilk < 0 then newMilk = 0 end
-            self.animal:getData():setMilkQuantity(newMilk)
-            if isServer() then
-                sendServerCommandV("MilkIntoBarrel", "syncMilk",
-                    "id", self.animal:getOnlineID(), "value", newMilk)
-            end
-
-            self.amountSent = newBarrelAmt
-        end
-    end
-
-    self.character:setMetabolicTarget(Metabolics.HeavyDomestic)
-end
-
-function MB_MilkIntoBarrelAction:animEvent(event, parameter)
+    local newMilk = data:getMilkQuantity() - amt
+    if newMilk < 0 then newMilk = 0 end
+    data:setMilkQuantity(newMilk)
     if isServer() then
-        if event == "update" then
-            self:update()
-        end
+        sendServerCommandV("MilkIntoBarrel", "syncMilk",
+            "id", self.animal:getOnlineID(), "value", newMilk)
     end
 end
 
-function MB_MilkIntoBarrelAction:serverStart()
-    self.animal:getBehavior():setBlockMovement(true)
-    local period = getRate() * 20
-    emulateAnimEvent(self.netAction, period, "update", nil)
-end
-
-function MB_MilkIntoBarrelAction:start()
-    self.animal:getBehavior():setBlockMovement(true)
-    self:setActionAnim("fill_container_tap")
-    self:setOverrideHandModels(nil, nil)
-    self.sound = self.character:playSound("GetWaterFromLake")
-end
-
-function MB_MilkIntoBarrelAction:stop()
-    self.character:stopOrTriggerSound(self.sound)
-    self.animal:getBehavior():setBlockMovement(false)
-    ISBaseTimedAction.stop(self)
-end
-
-function MB_MilkIntoBarrelAction:perform()
-    self.character:stopOrTriggerSound(self.sound)
-    ISBaseTimedAction.perform(self)
-end
-
-function MB_MilkIntoBarrelAction:complete()
-    if not isClient() then
-        if self.barrel:isEmpty() and self.barrel:canAddFluid(self.milkFluid) then
-            self.barrel:addFluid(self.milkFluid, self.amountToTransfer)
-        else
-            self.barrel:adjustSpecificFluidAmount(self.milkFluid, self.barrelTarget)
-        end
-        self.barrelObj:sync()
-        LuaEventManager.triggerEvent("OnWaterAmountChange", self.barrelObj, -1)
-
-        self.animal:getData():setMilkQuantity(self.milkTarget)
-        if isServer() then
-            sendServerCommandV("MilkIntoBarrel", "syncMilk",
-                "id", self.animal:getOnlineID(), "value", self.milkTarget)
-        end
-    end
-
-    self.animal:getBehavior():setBlockMovement(false)
-
-    -- Pas d'XP Elevage octroyee ici volontairement.
-    -- L'XP de traite vanilla est calculee dans le moteur (Java, via animal:milkAnimal),
-    -- ponderee par l'attribut "Animal Care" de la bete : elle n'est pas reproductible par
-    -- une valeur fixe cote Lua. Mettre un nombre arbitraire deseequilibrerait le jeu.
-    -- Pour octroyer la VRAIE XP, il faudrait router la traite via le milkAnimal vanilla
-    -- (traite dans un seau puis transfert vers le baril) -- a decider avec l'auteur.
-    return true
-end
-
-function MB_MilkIntoBarrelAction:serverStop()
-    self.animal:getBehavior():setBlockMovement(false)
-end
-
-function MB_MilkIntoBarrelAction:getDuration()
-    self.barrelStart = self.barrel:getAmount()
-    self.milkStart = self.animal:getData():getMilkQuantity()
-
-    local freeCap = self.barrel:getFreeCapacity()
-    self.amountToTransfer = math.min(freeCap, self.milkStart)
-
-    self.barrelTarget = self.barrelStart + self.amountToTransfer
-    self.milkTarget = self.milkStart - self.amountToTransfer
-    self.amountSent = self.barrelStart
-
-    if self.character:isTimedActionInstant() then
-        return 1
-    end
-    return math.max(1, self.amountToTransfer * getRate())
-end
-
-function MB_MilkIntoBarrelAction:new(character, animal, barrelObj)
-    local o = ISBaseTimedAction.new(self, character)
-    o.character = character
-    o.animal = animal
+function MB_MilkIntoBarrelAction:new(character, animal, right, barrelObj)
+    local o = ISMilkAnimal.new(self, character, animal, nil, right, false) -- bucket=nil : on ne remplit pas de seau
     o.barrelObj = barrelObj
     o.barrel = UB_Utils.GetValidBarrelFromWorldObjects({ barrelObj })
     o.milkFluid = MB_Utils.resolveMilkFluid(animal)
-    o.stopOnWalk = true
-    o.stopOnRun = true
-    o.maxTime = o:getDuration()
+    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- base x multiplicateur sandbox (defaut 3.0)
     return o
 end
