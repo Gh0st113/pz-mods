@@ -1,6 +1,6 @@
 name=Milk Into Barrels
 id=MilkIntoBarrel
-modversion=1.2.8
+modversion=1.2.9
 description=Milk an animal (cow, sheep...) straight into a nearby open Useful Barrels barrel. Right-click the animal or the barrel, or use the radial menu (V). Useful Barrels add-on, MP-safe.
 versionMin=42.13
 require=UsefulBarrelsMP

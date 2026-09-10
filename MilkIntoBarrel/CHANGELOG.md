@@ -2,6 +2,11 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.9 — 2026-09-10
+- **No-bucket duration multiplier range widened to 1–20** (was 5–20): you can now go as fast as ~1 second per liter (min 1 = the vanilla base milking speed). Default unchanged (10 ~ the normal, with-bucket milking pace, ~10 s/L / ~0.1 L/s).
+- **Clearer sandbox tooltip & Workshop description**: the value is now explained as roughly *seconds per liter* (5 = ~5 s/L) instead of a vague "speed".
+- Internal (defensive): the no-bucket milking speed is now recomputed **server-side** from the live sandbox value when the action starts, so in multiplayer the server's configured multiplier is always the one applied (guards against a stale/unsynced client value). The reported "multiplier does nothing" turned out to be a test-setup issue, not a code bug — the multiplier works and is linear (seconds/L ≈ the value), verified in MP.
+
 ## 1.2.8 — 2026-09-10
 - Repo cleanup, no gameplay change: **all source is now English** (mod name/description in `mod.info`, Lua and PowerShell comments) — the French text lives only in the `Translate/FR` files. The sandbox section header uses a plain `-` instead of `—` (some fonts render the em dash as "?").
 

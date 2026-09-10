@@ -6,7 +6,8 @@
 -- Deliberate "raw" mode: no XP, no stress/flee mechanic (unlike vanilla).
 -- The base (BASE_TIME_PER_LITER=40) is EXACTLY vanilla's timePerLiter (ISMilkAnimal:new),
 -- so DurationMultiplier=1.0 = the game's normal milking speed. Default 10.0 (~bucket-milking
--- rate, approximate; sandbox range 5..20). Admin/server-configurable.
+-- rate, approximate; sandbox range 1..20, where seconds-per-liter ~= the multiplier, so 1.0 =
+-- ~1 s/L = raw vanilla speed). Admin/server-configurable.
 
 require "TimedActions/Animals/ISMilkAnimal"
 
@@ -19,6 +20,12 @@ MB_MilkIntoBarrelAction = ISMilkAnimal:derive("MB_MilkIntoBarrelAction")
 -- no-bucket milking runs at the game's base speed; the sandbox value is only a factor.
 local BASE_TIME_PER_LITER = 40
 
+-- Set to true to log the actual DurationMultiplier / timePerLiter used, to the client AND
+-- server logs (one line per milking start). Leave false for release builds.
+local MB_DEBUG = false
+
+-- NOTE: fallback (10.0) intentionally equals the sandbox default, so a *failed read* is
+-- indistinguishable from the default at runtime -> use MB_DEBUG to see what is really applied.
 local function durationMult()
     if SandboxVars.MilkIntoBarrel and SandboxVars.MilkIntoBarrel.DurationMultiplier then
         return SandboxVars.MilkIntoBarrel.DurationMultiplier
@@ -64,11 +71,33 @@ function MB_MilkIntoBarrelAction:milk()
     end
 end
 
+-- MP: the action is built on the CLIENT (:new runs there), so :new()'s timePerLiter reflects the
+-- CLIENT's SandboxVars.MilkIntoBarrel.DurationMultiplier. If the mod's sandbox var is stale/not
+-- synced on that client, it silently falls back to 10.0 and the server would then run at a fixed
+-- rate regardless of the server's configured value -- i.e. "the multiplier does nothing".
+-- Fix: recompute timePerLiter HERE, on the server, from the SERVER's authoritative SandboxVars,
+-- right before emulateAnimEvent schedules the milking cadence. (SP never reaches serverStart; it
+-- runs :new() + update() on the host, which is authoritative already.)
+function MB_MilkIntoBarrelAction:serverStart()
+    self.timePerLiter = BASE_TIME_PER_LITER * durationMult()
+    if MB_DEBUG then
+        print(string.format(
+            "[MilkIntoBarrel] serverStart: DurationMultiplier=%s -> timePerLiter=%s (anim period=%s)",
+            tostring(durationMult()), tostring(self.timePerLiter), tostring(self.timePerLiter * 20)))
+    end
+    ISMilkAnimal.serverStart(self)
+end
+
 function MB_MilkIntoBarrelAction:new(character, animal, right, barrelObj)
     local o = ISMilkAnimal.new(self, character, animal, nil, right, false) -- bucket=nil: we do not fill a bucket
     o.barrelObj = barrelObj
     o.barrel = UB_Utils.GetValidBarrelFromWorldObjects({ barrelObj })
     o.milkFluid = MB_Utils.resolveMilkFluid(animal)
     o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- vanilla base (40) x sandbox multiplier (default 10.0 ~ bucket rate; 1.0 = raw vanilla speed)
+    if MB_DEBUG then
+        print(string.format(
+            "[MilkIntoBarrel] new: DurationMultiplier=%s -> timePerLiter=%s (client-side value)",
+            tostring(durationMult()), tostring(o.timePerLiter)))
+    end
     return o
 end

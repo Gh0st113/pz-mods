@@ -22,7 +22,7 @@ description=
 description=[h1]Sandbox options[/h1]
 description=[list]
 description=[*] [b]Allow milking without a bucket (hybrid)[/b] - off by default. When ON you can milk with or without a bucket: WITH a bucket you get the normal Husbandry XP; WITHOUT a bucket the milk still goes straight into the barrel (with the milking animation) but grants no XP.
-description=[*] [b]Milking duration multiplier (no-bucket only)[/b] - speed of the no-bucket milking (default tuned to the normal milking pace; higher = slower; no effect when you use a bucket).
+description=[*] [b]Milking duration multiplier (no-bucket only)[/b] - roughly the number of SECONDS to milk one liter without a bucket (e.g. 5 = ~5 s/L). Default 10 matches normal, with-bucket milking (~10 s/L, i.e. ~0.1 L/s); lower = faster (down to 1 = ~1 s/L), higher = slower (up to 20). No effect when you use a bucket.
 description=[/list]
 description=
 description=[h1]Dependency & thanks[/h1]
@@ -36,9 +36,8 @@ description=
 description=[h1]Compatibility[/h1]
 description=Build 42. This is an add-on: it doesn't replace anything in Useful Barrels.
 description=
-description=[h1]Changelog[/h1]
-description=[b]1.2.8[/b] - Milking without a bucket now plays the proper milking animation (before, it just transferred the milk instantly), and its speed is calibrated to match normal milking (sandbox multiplier, default tuned to the bucket pace; higher = slower). Minor: the radial "Milk" slice only shows when you are within range, and the mod version is shown in the sandbox section header.
-description=[b]1.2.2[/b] - Milking now runs through the vanilla milking animation into a bucket for real Husbandry XP, then pours automatically into the barrel (a very productive animal fills several buckets and empties them all). Added an optional no-bucket hybrid mode (direct transfer, no XP) and a custom radial-menu icon.
-description=[b]1.1.0[/b] - First Workshop release: milk a milkable animal straight into a nearby open barrel (right-click the animal or the barrel, or the radial menu V).
+description=[h1]Mod info[/h1]
+description=Workshop ID: 3798667277
+description=Mod ID: MilkIntoBarrel
 tags=Build 42;Animals;Balance;Farming;Food;Multiplayer;QoL
 visibility=public

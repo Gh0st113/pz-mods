@@ -11,10 +11,10 @@ Steam version and the version being uploaded** should be listed.
 
 | Channel | Version | Notes |
 |---|---|---|
-| 🟢 **Live on Steam** | **v1.2.8** | Workshop item `3798667277`. Uploaded 2026-09-10. No-bucket milking now plays the milking animation + its duration is calibrated; version shown in the sandbox header; English source. |
-| 🧪 **In test (not on Steam)** | — (none) | `main` == v1.2.8, which is live. |
+| 🟢 **Live on Steam** | **v1.2.9** | Workshop item `3798667277`. Uploaded 2026-09-10. No-bucket duration multiplier range widened to 1-20 (was 5-20, ~1 s/L possible); sandbox setting explained in seconds-per-liter; internal: no-bucket speed recomputed server-side from the live sandbox value. |
+| 🧪 **In test (not on Steam)** | — (none) | `main` == v1.2.9, which is live. |
 
-Steam upload history: **1.1.0** (first) → **1.2.2** (second) → **1.2.8** (current).
+Steam upload history: **1.1.0** (first) → **1.2.2** (second) → **1.2.8** (third) → **1.2.9** (current).
 
 > Update the **Live on Steam** row **only when the mod is actually uploaded** to the Workshop.
 
