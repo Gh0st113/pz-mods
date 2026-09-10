@@ -28,6 +28,7 @@ description=
 description=[h1]Dependency & thanks[/h1]
 description=Requires [url=https://steamcommunity.com/workshop/filedetails/?id=3436537035]Useful Barrels[/url] - make sure it's enabled too.
 description=Big thanks to [b]GigaWatte[/b] (and [b]SP4RTAN[/b], who maintains it) for Useful Barrels - this add-on builds on their barrel fluid system. :)
+description=Illustration by [b]MrMystère[/b] - thank you! :)
 description=
 description=[h1]Status[/h1]
 description=Tested in single-player and multiplayer (the transfer is computed server-side). If you spot an issue, please leave a comment. Thanks!
