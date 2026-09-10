@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.3 — 2026-09-10
+- Safety net: the radial menu (V) only builds its own wheel for a **wild** milkable animal when you're within milking range (< 3 tiles). Prevents any stray radial slice if the game ever reports a milkable animal that's out of reach. No visible change in normal play (when you're next to the animal).
+
 ## 1.2.2 — 2026-09-09
 - The radial menu (V) option now uses a **custom icon** (a barrel with a milk drop) instead of the vanilla milk-bucket icon, so it no longer looks identical to the normal "Milk" option.
 
