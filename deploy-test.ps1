@@ -51,9 +51,9 @@ Get-ChildItem -Path $target -Recurse -Filter mod.info | ForEach-Object {
     Set-Content -Path $_.FullName -Value $out -Encoding UTF8
 }
 
-# NB : la version est affichee proprement en jeu via l'option bac a sable MilkIntoBarrel.ModVersion
-# (page de config du mod). Le build de TEST reste identifiable a son nom "[TEST vX.Y.Z]" dans la
-# liste des mods (reecrit ci-dessus). On n'injecte donc plus rien dans sandbox-options / Sandbox.json.
+# NB : la version est affichee dans le TITRE de la section bac a sable (traduction Sandbox_MilkIntoBarrel,
+# ex. "Traire dans le baril - v1.2.6") = pas de champ modifiable. Le build de TEST reste identifiable a
+# son nom "[TEST vX.Y.Z]" dans la liste des mods (reecrit ci-dessus). On n'injecte rien dans les fichiers.
 
 Write-Host "Deploye (TEST) : $Mod  ->  $target"
 Write-Host "  id       = $testId   (ne peut PAS etre masque par le Workshop)"

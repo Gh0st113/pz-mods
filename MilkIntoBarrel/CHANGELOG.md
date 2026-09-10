@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.6 — 2026-09-10
+- **Mod version display fixed.** The version was shown as an editable text field in the sandbox options (users could change it). It's now shown in the **section header** ("Milk Into Barrels — v1.2.6") with no editable control, and the editable option was removed.
+
 ## 1.2.5 — 2026-09-10
 - **No-bucket duration finalized at default 10** (was 9). Measured in-game, x10 runs the no-bucket path at ~10 s/L — the same pace as milking with a bucket (~0.1 L/s). Sandbox range unchanged (5–20). This is the version published to the Workshop.
 

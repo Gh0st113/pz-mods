@@ -1,8 +1,5 @@
 VERSION = 1,
 
-option MilkIntoBarrel.ModVersion
-{type = string, default = 1.2.5, page = MilkIntoBarrel, translation = MilkIntoBarrelModVersion,}
-
 option MilkIntoBarrel.DurationMultiplier
 {type = double, min = 5.0, max = 20.0, default = 10.0, page = MilkIntoBarrel, translation = MilkIntoBarrelDurationMultiplier,}
 

@@ -1,7 +1,6 @@
 {
 
-  "Sandbox_MilkIntoBarrel": "Milk Into Barrels",
-  "Sandbox_MilkIntoBarrelModVersion": "Mod version (info only)",
+  "Sandbox_MilkIntoBarrel": "Milk Into Barrels — v1.2.6",
   "Sandbox_MilkIntoBarrelDurationMultiplier": "Milking duration multiplier (no-bucket only)",
   "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "No-bucket milking speed (approximate, not exactly vanilla). Default 10 ≈ the bucket-milking rate; higher = slower. No effect if you carry a bucket.",
   "Sandbox_MilkIntoBarrelAllowNoBucket": "Allow milking without a bucket (hybrid)",

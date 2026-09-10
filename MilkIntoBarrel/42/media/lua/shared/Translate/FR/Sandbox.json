@@ -1,7 +1,6 @@
 {
 
-  "Sandbox_MilkIntoBarrel": "Traire dans le baril",
-  "Sandbox_MilkIntoBarrelModVersion": "Version du mod (info)",
+  "Sandbox_MilkIntoBarrel": "Traire dans le baril — v1.2.6",
   "Sandbox_MilkIntoBarrelDurationMultiplier": "Multiplicateur de duree de traite (sans seau)",
   "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "Vitesse de la traite SANS seau (approximatif, pas exactement le vanilla). Defaut 10 ≈ le rythme de la traite au seau ; plus haut = plus lent. Aucun effet si tu portes un seau.",
   "Sandbox_MilkIntoBarrelAllowNoBucket": "Autoriser la traite sans seau (hybride)",
