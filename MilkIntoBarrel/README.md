@@ -52,4 +52,4 @@ recommended on a dedicated server.
 ```
 
 ## License
-MIT © Alpha13. See [../LICENSE](../LICENSE).
+MIT © Gh0st113. See [../LICENSE](../LICENSE).

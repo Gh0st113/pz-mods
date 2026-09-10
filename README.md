@@ -1,6 +1,6 @@
 # pz-mods
 
-Project Zomboid (Build 42) mods by Alpha13. One subfolder per mod.
+Project Zomboid (Build 42) mods by Gh0st113. One subfolder per mod.
 
 ## Mods
 
@@ -29,6 +29,6 @@ Each mod has a `workshop/` folder (poster, preview, text). See `MilkIntoBarrel/w
 
 ## License
 
-Code under the [MIT](LICENSE) license © Alpha13. These are **standalone add-ons**: they
+Code under the [MIT](LICENSE) license © Gh0st113. These are **standalone add-ons**: they
 depend on their required mods (e.g. Useful Barrels) at runtime but do not redistribute
 their code.
