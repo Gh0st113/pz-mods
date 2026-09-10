@@ -44,5 +44,5 @@ description=[b]1.2.3[/b] - Radial menu (V): the milk slice only appears when you
 description=[b]1.2.2[/b] - Radial menu (V): custom icon (a barrel with a milk drop) so it no longer looks identical to the vanilla "Milk" option.
 description=[b]1.2.1[/b] - Milking animation fix: the milk now actually pours into the barrel (the previous build queued a separate pour that the milking animation's force-stop cancelled). A very productive animal now fills several buckets and empties them all into the barrel.
 description=[b]1.2.0[/b] - Milking now runs through the vanilla milking animation into a bucket for real Husbandry XP, then auto-pours into the barrel. Optional no-bucket mode added (direct transfer, no XP).
-tags=Build 42;Food;Multiplayer
+tags=Build 42;Animals;Balance;Farming;Food;Multiplayer;QoL;WIP
 visibility=public
