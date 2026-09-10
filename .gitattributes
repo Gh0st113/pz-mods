@@ -1,0 +1,18 @@
+# Normalize line endings: store text as LF in the repo, check out natively.
+* text=auto
+
+# Text file types (LF in repo — cross-platform friendly)
+*.lua   text eol=lf
+*.json  text eol=lf
+*.txt   text eol=lf
+*.md    text eol=lf
+*.info  text eol=lf
+
+# Windows scripts stay CRLF
+*.ps1   text eol=crlf
+
+# Binary assets — never touch
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ogg   binary
