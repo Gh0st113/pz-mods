@@ -3,8 +3,10 @@
 Format: date (YYYY-MM-DD). Newest first.
 
 ## 1.2.4 — 2026-09-10
-- No-bucket milking duration is being **calibrated** in-game. The no-bucket path reuses the vanilla milking timing (base 40 per liter, same tick loop), so multiplier **1.0 = the game's base milking speed**. Default kept at **3.0** and the range widened to **1–10** so it can be tuned in-game to whatever feels closest to real milking. Higher = slower.
-- Clarified that no-bucket milking is a deliberate "raw" mode: no XP and **no stress/flee mechanic** (only the with-bucket path keeps vanilla XP and the stress mechanic). Sandbox tooltips (EN/FR) now spell out that the multiplier **only** affects the no-bucket mode (needs the hybrid option ON and no bucket carried).
+- **No-bucket milking duration calibrated.** Measured in-game against the vanilla bucket-milking rate (~0.1 L/s), the no-bucket multiplier now **defaults to 9** (≈ the bucket-milking rate — approximate, not exactly vanilla) and the sandbox range is **5–20** so server admins can make it slower or a bit faster. Higher = slower.
+- No-bucket remains a deliberate "raw" mode: no Husbandry XP and **no stress/flee mechanic** (only the with-bucket path keeps vanilla XP and the stress mechanic).
+- **Version now shown in the sandbox options** (a read-only "Mod version" line), so you can confirm which build you're running from the settings screen.
+- Shorter, clearer sandbox tooltip (the multiplier has no effect when you carry a bucket).
 
 ## 1.2.3 — 2026-09-10
 - Safety net: the radial menu (V) only builds its own wheel for a **wild** milkable animal when you're within milking range (< 3 tiles). Prevents any stray radial slice if the game ever reports a milkable animal that's out of reach. No visible change in normal play (when you're next to the animal).
