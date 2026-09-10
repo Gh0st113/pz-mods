@@ -5,7 +5,7 @@
 -- on surcharge :milk() pour transvaser ~1 L par tick de l'animal vers le baril.
 -- Mode "brut" assume : pas d'XP, pas de mecanique de stress/fuite (contrairement au vanilla).
 -- La base (BASE_TIME_PER_LITER=40) est EXACTEMENT le timePerLiter du vanilla (ISMilkAnimal:new),
--- donc DurationMultiplier=1.0 = vitesse de traite normale du jeu. Defaut 9.0 (~rythme de la
+-- donc DurationMultiplier=1.0 = vitesse de traite normale du jeu. Defaut 10.0 (~rythme de la
 -- traite au seau, approximatif ; plage sandbox 5..20). Reglable par l'admin/serveur.
 
 require "TimedActions/Animals/ISMilkAnimal"
@@ -23,7 +23,7 @@ local function durationMult()
     if SandboxVars.MilkIntoBarrel and SandboxVars.MilkIntoBarrel.DurationMultiplier then
         return SandboxVars.MilkIntoBarrel.DurationMultiplier
     end
-    return 9.0
+    return 10.0
 end
 
 function MB_MilkIntoBarrelAction:isValid()
@@ -69,6 +69,6 @@ function MB_MilkIntoBarrelAction:new(character, animal, right, barrelObj)
     o.barrelObj = barrelObj
     o.barrel = UB_Utils.GetValidBarrelFromWorldObjects({ barrelObj })
     o.milkFluid = MB_Utils.resolveMilkFluid(animal)
-    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- base vanilla (40) x multiplicateur sandbox (defaut 9.0 ~ rythme seau ; 1.0 = vitesse vanilla brute)
+    o.timePerLiter = BASE_TIME_PER_LITER * durationMult()   -- base vanilla (40) x multiplicateur sandbox (defaut 10.0 ~ rythme seau ; 1.0 = vitesse vanilla brute)
     return o
 end

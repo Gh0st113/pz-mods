@@ -3,7 +3,7 @@
   "Sandbox_MilkIntoBarrel": "Traire dans le baril",
   "Sandbox_MilkIntoBarrelModVersion": "Version du mod (info)",
   "Sandbox_MilkIntoBarrelDurationMultiplier": "Multiplicateur de duree de traite (sans seau)",
-  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "Vitesse de la traite SANS seau (approximatif, pas exactement le vanilla). Defaut 9 ≈ le rythme de la traite au seau ; plus haut = plus lent. Aucun effet si tu portes un seau.",
+  "Sandbox_MilkIntoBarrelDurationMultiplier_tooltip": "Vitesse de la traite SANS seau (approximatif, pas exactement le vanilla). Defaut 10 ≈ le rythme de la traite au seau ; plus haut = plus lent. Aucun effet si tu portes un seau.",
   "Sandbox_MilkIntoBarrelAllowNoBucket": "Autoriser la traite sans seau (hybride)",
   "Sandbox_MilkIntoBarrelAllowNoBucket_tooltip": "OFF (defaut) : un seau est requis pour traire dans le baril. ON (hybride) : tu peux aussi traire sans seau - AVEC un seau tu gagnes l'XP d'Elevage normale ; SANS seau le lait va quand meme dans le baril mais SANS XP."
 }

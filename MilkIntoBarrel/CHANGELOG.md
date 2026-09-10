@@ -2,6 +2,9 @@
 
 Format: date (YYYY-MM-DD). Newest first.
 
+## 1.2.5 — 2026-09-10
+- **No-bucket duration finalized at default 10** (was 9). Measured in-game, x10 runs the no-bucket path at ~10 s/L — the same pace as milking with a bucket (~0.1 L/s). Sandbox range unchanged (5–20). This is the version published to the Workshop.
+
 ## 1.2.4 — 2026-09-10
 - **No-bucket milking duration calibrated.** Measured in-game against the vanilla bucket-milking rate (~0.1 L/s), the no-bucket multiplier now **defaults to 9** (≈ the bucket-milking rate — approximate, not exactly vanilla) and the sandbox range is **5–20** so server admins can make it slower or a bit faster. Higher = slower.
 - No-bucket remains a deliberate "raw" mode: no Husbandry XP and **no stress/flee mechanic** (only the with-bucket path keeps vanilla XP and the stress mechanic).
